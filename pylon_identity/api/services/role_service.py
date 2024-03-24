@@ -1,9 +1,9 @@
 from fastapi import HTTPException
+from pylon.api.services.base_service import BaseService
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.models import Role
 from pylon_identity.api.schemas.role_schema import RolePublic, RoleSchema
-from pylon.api.services.base_service import BaseService
 
 
 class RoleService(BaseService):

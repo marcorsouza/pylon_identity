@@ -1,12 +1,12 @@
 from datetime import datetime
 
 from fastapi import HTTPException
+from pylon.api.services.base_service import BaseService
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.models import User
 from pylon_identity.api.schemas.user_schema import UserPublic, UserSchema
-from pylon.api.services.base_service import BaseService
 from pylon_identity.core.utils.encryption_utils import (
     encrypt_value,
     is_encrypted,

@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from pylon.api.services.base_service import BaseService
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -7,7 +8,6 @@ from pylon_identity.api.schemas.application_schema import (
     ApplicationPublic,
     ApplicationSchema,
 )
-from pylon.api.services.base_service import BaseService
 
 
 class ApplicationService(BaseService):
