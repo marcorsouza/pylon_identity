@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "pylon-identity"
+version = "0.1.0"
+description = ""
+authors = ["marcorsouza <marco.rsouza@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pylon = { git = "https://github.com/marcorsouza/pylon.git", branch = "master" }
+
+[tool.ruff]
+line-length = 79
+exclude = ['.venv', 'migrations', '__init__.py']
+
+[tool.isort]
+profile = "black"
+line_length = 79
+extend_skip = ['migrations']
+
+[tool.pytest.ini_options]
+pythonpath = "."
+
+[tool.blue]
+extend-exclude = '(migrations/)'
+
+[tool.taskipy.tasks]
+lint = 'ruff . && blue --check . --diff'
+format = 'blue .  && isort .'
+run = 'uvicorn pylon_identity.main:app --reload'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=pylon_identity -vv'
+post_test = 'coverage html'
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
