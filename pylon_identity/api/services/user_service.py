@@ -1,16 +1,13 @@
 from datetime import datetime
 
-from fastapi import HTTPException
 from pylon.api.services.base_service import BaseService
+from pylon.config.exceptions.http import BadRequestException, NotFoundException
+from pylon.utils.encryption_utils import encrypt_value, is_encrypted
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.models import User
 from pylon_identity.api.schemas.user_schema import UserPublic, UserSchema
-from pylon_identity.core.utils.encryption_utils import (
-    encrypt_value,
-    is_encrypted,
-)
 
 
 class UserService(BaseService):
@@ -19,8 +16,7 @@ class UserService(BaseService):
     """
 
     def __init__(self, session: Session = None):
-        super().__init__(session, User, UserSchema)
-        self.public_schema = UserPublic
+        super().__init__(session, User, UserSchema, UserPublic)
 
     def create(self, user_data) -> User:
         """
@@ -34,9 +30,7 @@ class UserService(BaseService):
         """
         db_user = self._get_by_username(user_data.username)
         if db_user:
-            raise HTTPException(
-                status_code=400, detail='Username already registered'
-            )
+            raise BadRequestException('Username already registered')
 
         user_data.password = encrypt_value(user_data.password)
         user = User(**user_data.model_dump())
@@ -65,12 +59,12 @@ class UserService(BaseService):
             User: O usuário correspondente ao ID fornecido.
 
         Raises:
-            HTTPException: Se o usuário não for encontrado.
+            NotFoundException: Se o usuário não for encontrado.
         """
         user = self._get_by_id(user_id)
         if user and user.id == user_id:
             return user
-        raise HTTPException(status_code=404, detail='User not found.')
+        raise NotFoundException('User not found.')
 
     def update(self, user_id: int, user_data):
         """
@@ -84,13 +78,11 @@ class UserService(BaseService):
             User: O usuário atualizado.
 
         Raises:
-            HTTPException: Se o usuário não for encontrado.
+            NotFoundException: Se o usuário não for encontrado.
         """
         user = self._get_by_id(user_id)
         if not user or user_id < 1:
-            raise HTTPException(
-                status_code=404, detail='User not found.'
-            )   # pragma: no cover
+            raise NotFoundException('User not found.')   # pragma: no cover
 
         self._update(user, user_data)
         return user
@@ -106,14 +98,12 @@ class UserService(BaseService):
             dict: Dicionário com uma mensagem indicando que o usuário foi excluído.
 
         Raises:
-            HTTPException: Se o usuário não for encontrado.
+            NotFoundException: Se o usuário não for encontrado.
         """
         deleted = self._delete(user_id)
 
         if not deleted or user_id < 1:
-            raise HTTPException(
-                status_code=404, detail='User not found'
-            )   # pragma: no cover
+            raise NotFoundException('User not found.')  # pragma: no cover
 
         return {'message': 'User deleted'}
 
@@ -139,12 +129,12 @@ class UserService(BaseService):
             User: O usuário correspondente ao nome de usuário fornecido.
 
         Raises:
-            HTTPException: Se o usuário não for encontrado.
+            NotFoundException: Se o usuário não for encontrado.
         """
         user = self._get_by_username(username)
         if user:
             return user
-        raise HTTPException(status_code=404, detail='User not found.')
+        raise NotFoundException('User not found.')
 
     def authenticate(self, username, password):
         """
@@ -165,7 +155,8 @@ class UserService(BaseService):
                 and is_encrypted(password, user.temporary_password)
                 and (
                     user.temporary_password_expiration is None
-                    or user.temporary_password_expiration >= datetime.utcnow()
+                    or user.temporary_password_expiration
+                    >= datetime.now(datetime.UTC)
                 )
             ):
                 return user   # pragma: no cover
@@ -208,13 +199,13 @@ class UserService(BaseService):
         """
         Atualiza a data do último login do usuário para o momento atual.
         """
-        user.last_login_date = datetime.utcnow()
+        user.last_login_date = datetime.now(datetime.UTC)
         self.session.commit()
 
     def add_roles_to_user(self, user_id: int, model_data):
         user = self._get_by_id(user_id)
         if not user:
-            raise HTTPException(status_code=404, detail='User not found.')
+            raise NotFoundException('User not found.')
 
         user = User(**model_data.model_dump())
 

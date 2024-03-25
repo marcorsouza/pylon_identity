@@ -2,11 +2,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from pylon.api.schemas.message_schema import Message
+from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.controllers.user_controller import UserController
 from pylon_identity.api.models import User
-from pylon_identity.api.schemas.message_schema import Message
 from pylon_identity.api.schemas.user_schema import (
     UserList,
     UserPublic,
@@ -14,11 +15,10 @@ from pylon_identity.api.schemas.user_schema import (
     UserUpdate,
 )
 from pylon_identity.api.services.user_service import UserService
-from pylon_identity.helpers import get_session
-from pylon_identity.security import get_current_user
+from pylon_identity.config.security import get_current_user
 
 # Criar roteador
-router = APIRouter(
+user_router = APIRouter(
     prefix='/users',
     tags=['Users'],
 )
@@ -39,7 +39,7 @@ def get_user_controller(
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 # Rota de criação de usuário
-@router.post('/', response_model=UserPublic, status_code=201)
+@user_router.post('/', response_model=UserPublic, status_code=201)
 async def create_user(
     user_in: UserSchema = Body(...),
     user_controller: UserController = Depends(get_user_controller),
@@ -48,7 +48,7 @@ async def create_user(
 
 
 # Rota de recuperação de todos os usuários
-@router.get('/', response_model=UserList)
+@user_router.get('/', response_model=UserList)
 async def get_users(
     user_controller: UserController = Depends(get_user_controller),
 ):
@@ -56,7 +56,7 @@ async def get_users(
 
 
 # Rota de recuperação de um usuário por ID
-@router.get('/{user_id}', response_model=UserPublic)
+@user_router.get('/{user_id}', response_model=UserPublic)
 async def get_user(
     user_id: int,
     user_controller: UserController = Depends(get_user_controller),
@@ -65,7 +65,7 @@ async def get_user(
 
 
 # Rota de atualização de um usuário por ID
-@router.put('/{user_id}', response_model=UserPublic)
+@user_router.put('/{user_id}', response_model=UserPublic)
 async def update_user(
     user_id: int,
     user_in: UserUpdate = Body(...),
@@ -79,7 +79,7 @@ async def update_user(
 
 
 # Rota de exclusão de um usuário por ID
-@router.delete('/{user_id}', response_model=Message)
+@user_router.delete('/{user_id}', response_model=Message)
 async def delete_user(
     user_id: int,
     user_controller: UserController = Depends(get_user_controller),

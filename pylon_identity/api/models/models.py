@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pylon.api.models import Base
+from pylon.api.models.base import Base
 from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
