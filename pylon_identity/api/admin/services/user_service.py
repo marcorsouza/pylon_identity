@@ -6,15 +6,13 @@ from pylon.utils.encryption_utils import encrypt_value, is_encrypted
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.admin.models import User, Role
+from pylon_identity.api.admin.models import Role, User
 from pylon_identity.api.admin.schemas.user_schema import (
     UserPublic,
     UserRole,
     UserSchema,
 )
-from pylon_identity.api.admin.schemas.role_schema import (
-    RoleSimple
-)
+
 
 class UserService(BaseService):
     """
@@ -216,11 +214,9 @@ class UserService(BaseService):
 
         # Extrair os IDs dos RoleSimple
         ids = [role_simple.id for role_simple in user_role.roles]
-    
+
         # Buscar os papéis (roles) que correspondem aos IDs fornecidos
-        roles_to_add = (
-            self.session.query(Role).filter(Role.id.in_(ids)).all()
-        )
+        roles_to_add = self.session.query(Role).filter(Role.id.in_(ids)).all()
 
         # Adicionando os papéis ao usuário
         for role in roles_to_add:
@@ -237,7 +233,7 @@ class UserService(BaseService):
 
         # Extrair os IDs dos RoleSimple
         ids = [role_simple.id for role_simple in user_role.roles]
-    
+
         # Buscar os papéis (roles) que correspondem aos IDs fornecidos
         roles_to_remove = (
             self.session.query(Role).filter(Role.id.in_(ids)).all()

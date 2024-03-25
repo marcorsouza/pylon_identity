@@ -81,6 +81,27 @@ def test_update_user(client, user, token):
     assert result['is_locked_out']
 
 
+def test_add_and_del_roles_to_user(client, user, role, application, token):
+    response = client.post(
+        '/admin/users/add_roles_to_user/1',
+        headers={'Authorization': f'Bearer {token}'},
+        json={'roles': [{'id': 1}]},
+    )
+    assert response.status_code == 200
+    result = response.json()
+    assert result['name'] == 'Testando Usuário'
+    assert len(result['roles']) == 1
+
+    response = client.put(
+        '/admin/users/del_roles_to_user/1',
+        headers={'Authorization': f'Bearer {token}'},
+        json={'roles': [{'id': 1}]},
+    )
+    assert response.status_code == 200
+    result = response.json()
+    assert len(result['roles']) == 0
+
+
 def test_update_user_nonexistent_user(client):
     response = client.put(
         '/admin/users/99',

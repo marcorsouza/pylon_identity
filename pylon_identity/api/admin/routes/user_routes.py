@@ -98,6 +98,7 @@ async def add_roles_to_user(
 ):
     return await user_controller.add_roles_to_user(user_id, user_in)
 
+
 @user_router.put('/del_roles_to_user/{user_id}', response_model=UserPublic)
 async def del_roles_to_user(
     user_id: int,
