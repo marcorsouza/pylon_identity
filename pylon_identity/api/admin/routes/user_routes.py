@@ -11,6 +11,7 @@ from pylon_identity.api.admin.models import User
 from pylon_identity.api.admin.schemas.user_schema import (
     UserList,
     UserPublic,
+    UserRole,
     UserSchema,
     UserUpdate,
 )
@@ -86,3 +87,22 @@ async def delete_user(
     current_user: CurrentUser = CurrentUser,
 ):
     return await user_controller.delete(user_id)
+
+
+@user_router.post('/add_roles_to_user/{user_id}', response_model=UserPublic)
+async def add_roles_to_user(
+    user_id: int,
+    user_in: UserRole = Body(...),
+    user_controller: UserController = Depends(get_user_controller),
+    current_user: CurrentUser = CurrentUser,
+):
+    return await user_controller.add_roles_to_user(user_id, user_in)
+
+@user_router.put('/del_roles_to_user/{user_id}', response_model=UserPublic)
+async def del_roles_to_user(
+    user_id: int,
+    user_in: UserRole = Body(...),
+    user_controller: UserController = Depends(get_user_controller),
+    current_user: CurrentUser = CurrentUser,
+):
+    return await user_controller.del_roles_to_user(user_id, user_in)

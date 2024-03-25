@@ -6,9 +6,15 @@ from pylon.utils.encryption_utils import encrypt_value, is_encrypted
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.admin.models import User
-from pylon_identity.api.admin.schemas.user_schema import UserPublic, UserSchema
-
+from pylon_identity.api.admin.models import User, Role
+from pylon_identity.api.admin.schemas.user_schema import (
+    UserPublic,
+    UserRole,
+    UserSchema,
+)
+from pylon_identity.api.admin.schemas.role_schema import (
+    RoleSimple
+)
 
 class UserService(BaseService):
     """
@@ -203,15 +209,44 @@ class UserService(BaseService):
         user.last_login_date = datetime.now(timezone.utc)
         self.session.commit()
 
-    def add_roles_to_user(self, user_id: int, model_data):
+    def add_roles_to_user(self, user_id: int, user_role: UserRole):
         user = self._get_by_id(user_id)
         if not user:
             raise NotFoundException('User not found.')
 
-        user = User(**model_data.model_dump())
+        # Extrair os IDs dos RoleSimple
+        ids = [role_simple.id for role_simple in user_role.roles]
+    
+        # Buscar os papéis (roles) que correspondem aos IDs fornecidos
+        roles_to_add = (
+            self.session.query(Role).filter(Role.id.in_(ids)).all()
+        )
+
+        # Adicionando os papéis ao usuário
+        for role in roles_to_add:
+            if role not in user.roles:
+                user.roles.append(role)
 
         self.session.commit()
-        return user
+        return self._get_by_id(user.id)
 
-    def del_roles_to_user(self, user_id, role):
-        pass
+    def del_roles_to_user(self, user_id: int, user_role: UserRole):
+        user = self._get_by_id(user_id)
+        if not user:
+            raise NotFoundException('User not found.')
+
+        # Extrair os IDs dos RoleSimple
+        ids = [role_simple.id for role_simple in user_role.roles]
+    
+        # Buscar os papéis (roles) que correspondem aos IDs fornecidos
+        roles_to_remove = (
+            self.session.query(Role).filter(Role.id.in_(ids)).all()
+        )
+
+        # Removendo os papéis do usuário
+        for role in roles_to_remove:
+            if role in user.roles:
+                user.roles.remove(role)
+
+        self.session.commit()
+        return self._get_by_id(user.id)

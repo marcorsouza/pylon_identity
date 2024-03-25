@@ -1,5 +1,9 @@
 from pydantic import BaseModel
 
+from pylon_identity.api.admin.schemas.application_schema import (
+    ApplicationPublic,
+)
+
 
 class RoleSchema(BaseModel):
     name: str
@@ -14,12 +18,11 @@ class RoleUpdate(BaseModel):
 class RolePublic(BaseModel):
     id: int
     name: str
-    application_id: int
+    application: ApplicationPublic
 
 
 class RoleSimple(BaseModel):
     id: int
-    application_id: int
 
 
 class RoleList(BaseModel):
