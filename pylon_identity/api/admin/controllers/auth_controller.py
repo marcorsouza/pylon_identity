@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 
-from pylon_identity.api.services.user_service import UserService
+from pylon_identity.api.admin.services.user_service import UserService
 
 
 class AuthController:

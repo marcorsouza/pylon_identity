@@ -1,24 +1,26 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends
+from pylon.api.schemas.message_schema import Message
+from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.controllers.application_controller import (
+from pylon_identity.api.admin.controllers.application_controller import (
     ApplicationController,
 )
-from pylon_identity.api.schemas.application_schema import (
+from pylon_identity.api.admin.schemas.application_schema import (
     ApplicationList,
     ApplicationPublic,
     ApplicationSchema,
     ApplicationUpdate,
 )
-from pylon_identity.api.schemas.message_schema import Message
-from pylon_identity.api.services.application_service import ApplicationService
-from pylon_identity.helpers import get_session
+from pylon_identity.api.admin.services.application_service import (
+    ApplicationService,
+)
 
 # Criar roteador
 application_router = APIRouter(
-    prefix='/applications',
+    prefix='/admin/applications',
     tags=['Applications'],
 )
 

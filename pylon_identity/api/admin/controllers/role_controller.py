@@ -1,6 +1,6 @@
 from pylon.api.controllers.base_controller import BaseController
 
-from pylon_identity.api.services.role_service import RoleService
+from pylon_identity.api.admin.services.role_service import RoleService
 
 
 class RoleController(BaseController):

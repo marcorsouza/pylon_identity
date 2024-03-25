@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.controllers.auth_controller import AuthController
-from pylon_identity.api.services.user_service import UserService
-from pylon_identity.helpers import get_session
-from pylon_identity.security import create_access_token
+from pylon_identity.api.admin.controllers.auth_controller import AuthController
+from pylon_identity.api.admin.services.user_service import UserService
+from pylon_identity.config.security import create_access_token
 
 # Criar roteador
 auth_router = APIRouter(

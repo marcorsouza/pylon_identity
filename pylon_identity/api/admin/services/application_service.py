@@ -3,8 +3,8 @@ from pylon.api.services.base_service import BaseService
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.models import Application
-from pylon_identity.api.schemas.application_schema import (
+from pylon_identity.api.admin.models import Application
+from pylon_identity.api.admin.schemas.application_schema import (
     ApplicationPublic,
     ApplicationSchema,
 )

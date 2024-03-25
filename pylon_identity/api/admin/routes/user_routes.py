@@ -6,20 +6,20 @@ from pylon.api.schemas.message_schema import Message
 from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.controllers.user_controller import UserController
-from pylon_identity.api.models import User
-from pylon_identity.api.schemas.user_schema import (
+from pylon_identity.api.admin.controllers.user_controller import UserController
+from pylon_identity.api.admin.models import User
+from pylon_identity.api.admin.schemas.user_schema import (
     UserList,
     UserPublic,
     UserSchema,
     UserUpdate,
 )
-from pylon_identity.api.services.user_service import UserService
+from pylon_identity.api.admin.services.user_service import UserService
 from pylon_identity.config.security import get_current_user
 
 # Criar roteador
 user_router = APIRouter(
-    prefix='/users',
+    prefix='/admin/users',
     tags=['Users'],
 )
 

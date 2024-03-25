@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pylon.api.services.base_service import BaseService
 from pylon.config.exceptions.http import BadRequestException, NotFoundException
@@ -6,8 +6,8 @@ from pylon.utils.encryption_utils import encrypt_value, is_encrypted
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.models import User
-from pylon_identity.api.schemas.user_schema import UserPublic, UserSchema
+from pylon_identity.api.admin.models import User
+from pylon_identity.api.admin.schemas.user_schema import UserPublic, UserSchema
 
 
 class UserService(BaseService):
@@ -16,7 +16,8 @@ class UserService(BaseService):
     """
 
     def __init__(self, session: Session = None):
-        super().__init__(session, User, UserSchema, UserPublic)
+        super().__init__(session, User, UserSchema)
+        self.public_schema = UserPublic
 
     def create(self, user_data) -> User:
         """
@@ -156,7 +157,7 @@ class UserService(BaseService):
                 and (
                     user.temporary_password_expiration is None
                     or user.temporary_password_expiration
-                    >= datetime.now(datetime.UTC)
+                    >= datetime.now(timezone.utc)
                 )
             ):
                 return user   # pragma: no cover
@@ -199,7 +200,7 @@ class UserService(BaseService):
         """
         Atualiza a data do último login do usuário para o momento atual.
         """
-        user.last_login_date = datetime.now(datetime.UTC)
+        user.last_login_date = datetime.now(timezone.utc)
         self.session.commit()
 
     def add_roles_to_user(self, user_id: int, model_data):

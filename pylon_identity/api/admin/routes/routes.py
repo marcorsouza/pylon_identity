@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from pylon_identity.api.routes.user_routes import (  # Import roteador de usuário
+from pylon_identity.api.admin.routes.user_routes import (  # Import roteador de usuário
     user_router,
 )
 

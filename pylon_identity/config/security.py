@@ -8,8 +8,8 @@ from pylon.config.settings import Settings
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.models import User
-from pylon_identity.api.schemas.token_schema import TokenData
+from pylon_identity.api.admin.models import User
+from pylon_identity.api.admin.schemas.token_schema import TokenData
 
 settings = Settings()
 

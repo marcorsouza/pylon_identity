@@ -1,6 +1,6 @@
 from pylon.api.controllers.base_controller import BaseController
 
-from pylon_identity.api.services.user_service import UserService
+from pylon_identity.api.admin.services.user_service import UserService
 
 
 class UserController(BaseController):

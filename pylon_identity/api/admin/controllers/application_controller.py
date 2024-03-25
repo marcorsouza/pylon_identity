@@ -1,6 +1,8 @@
 from pylon.api.controllers.base_controller import BaseController
 
-from pylon_identity.api.services.application_service import ApplicationService
+from pylon_identity.api.admin.services.application_service import (
+    ApplicationService,
+)
 
 
 class ApplicationController(BaseController):

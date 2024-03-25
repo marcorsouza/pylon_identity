@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
-from pylon_identity.api.schemas.role_schema import RolePublic, RoleSimple
+from pylon_identity.api.admin.schemas.role_schema import RolePublic, RoleSimple
 
 
 class UserSchema(BaseModel):

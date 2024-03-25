@@ -1,22 +1,22 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends
+from pylon.api.schemas.message_schema import Message
+from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.controllers.role_controller import RoleController
-from pylon_identity.api.schemas.message_schema import Message
-from pylon_identity.api.schemas.role_schema import (
+from pylon_identity.api.admin.controllers.role_controller import RoleController
+from pylon_identity.api.admin.schemas.role_schema import (
     RoleList,
     RolePublic,
     RoleSchema,
     RoleUpdate,
 )
-from pylon_identity.api.services.role_service import RoleService
-from pylon_identity.helpers import get_session
+from pylon_identity.api.admin.services.role_service import RoleService
 
 # Criar roteador
 role_router = APIRouter(
-    prefix='/roles',
+    prefix='/admin/roles',
     tags=['Roles'],
 )
 
