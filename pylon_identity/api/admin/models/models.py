@@ -70,3 +70,14 @@ class Role(Base):
 
     # Definindo relacionamento com User
     users = relationship('User', secondary=user_role, back_populates='roles')
+
+
+class Task(Base):
+    __tablename__ = 'tasks'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    tag_name: Mapped[str] = mapped_column(nullable=False)
+    icon: Mapped[str] = mapped_column(nullable=True)
+    show_in_menu: Mapped[str] = mapped_column(nullable=True)
+    menu_title: Mapped[str] = mapped_column(nullable=True)

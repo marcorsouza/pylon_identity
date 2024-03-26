@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from pylon_identity.api.admin.models import Application, Base, Role, User
+from pylon_identity.api.admin.models import Application, Base, Role, Task, User
 from pylon_identity.app import app
 
 
@@ -28,6 +28,17 @@ def application_data():
 @pytest.fixture
 def role_data(application):
     return {'name': 'Admin', 'application_id': application.id}
+
+
+@pytest.fixture
+def task_data():
+    return {
+        'name': 'Task 1',
+        'tag_name': 'TSK1',
+        'icon': '',
+        'show_in_menu': '',
+        'menu_title': '',
+    }
 
 
 @pytest.fixture
@@ -120,3 +131,15 @@ def role(session, application):
     session.refresh(role)
 
     return role
+
+
+@pytest.fixture
+def task(session):
+    task = Task(
+        name='Task 1', tag_name='TSK1', icon='', show_in_menu='', menu_title=''
+    )
+    session.add(task)
+    session.commit()
+    session.refresh(task)
+
+    return task

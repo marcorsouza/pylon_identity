@@ -1,5 +1,5 @@
-from fastapi import HTTPException
 from pylon.api.services.base_service import BaseService
+from pylon.config.exceptions.http import BadRequestException, NotFoundException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -31,9 +31,7 @@ class ApplicationService(BaseService):
         """
         db_application = self._get_by_acronym(application_data.acronym)
         if db_application:
-            raise HTTPException(
-                status_code=400, detail='Acronym already registered'
-            )
+            raise BadRequestException('Acronym already registered')
 
         application = Application(**application_data.model_dump())
         self._create(application)
@@ -66,7 +64,7 @@ class ApplicationService(BaseService):
         application = self._get_by_id(application_id)
         if application and application.id == application_id:
             return application
-        raise HTTPException(status_code=404, detail='Application not found.')
+        raise NotFoundException('Application not found.')
 
     def update(self, application_id: int, application_data):
         """
@@ -84,8 +82,8 @@ class ApplicationService(BaseService):
         """
         application = self._get_by_id(application_id)
         if not application or application_id < 1:
-            raise HTTPException(
-                status_code=404, detail='Application not found.'
+            raise NotFoundException(
+                'Application not found.'
             )   # pragma: no cover
 
         self._update(application, application_data)
@@ -107,8 +105,8 @@ class ApplicationService(BaseService):
         deleted = self._delete(application_id)
 
         if not deleted or application_id < 1:
-            raise HTTPException(
-                status_code=404, detail='Application not found'
+            raise NotFoundException(
+                'Application not found'
             )   # pragma: no cover
 
         return {'message': 'Application deleted'}
