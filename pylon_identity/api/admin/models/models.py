@@ -81,3 +81,11 @@ class Task(Base):
     icon: Mapped[str] = mapped_column(nullable=True)
     show_in_menu: Mapped[str] = mapped_column(nullable=True)
     menu_title: Mapped[str] = mapped_column(nullable=True)
+
+class Action(Base):
+    __tablename__ = 'actions'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    task_id: Mapped[int] = mapped_column(ForeignKey('tasks.id'))
+
+    task: Mapped[Task] = relationship(back_populates='actions')
