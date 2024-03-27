@@ -82,6 +82,11 @@ class Task(Base):
     show_in_menu: Mapped[str] = mapped_column(nullable=True)
     menu_title: Mapped[str] = mapped_column(nullable=True)
 
+    actions: Mapped[list['Action']] = relationship(
+        back_populates='task', cascade='all, delete-orphan'
+    )
+
+
 class Action(Base):
     __tablename__ = 'actions'
     id: Mapped[int] = mapped_column(primary_key=True)

@@ -57,6 +57,7 @@ def test_update_task(client, task, token):
             'icon': '',
             'show_in_menu': '',
             'menu_title': '',
+            'actions': [],
         },
     )
     assert response.status_code == 200
@@ -74,6 +75,7 @@ def test_update_task_nonexistent_task(client):
             'icon': '',
             'show_in_menu': '',
             'menu_title': '',
+            'actions': [],
         },
     )
     assert response.status_code == 404

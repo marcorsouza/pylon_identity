@@ -5,4 +5,5 @@ from pylon_identity.api.admin.models.models import (
     Role,
     Task,
     User,
+    Action
 )

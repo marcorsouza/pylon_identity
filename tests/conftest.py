@@ -38,6 +38,11 @@ def task_data():
         'icon': '',
         'show_in_menu': '',
         'menu_title': '',
+        'actions': [
+            {'name': 'ACTION 1'},
+            {'name': 'ACTION 2'},
+            {'name': 'ACTION 3'},
+        ],
     }
 
 

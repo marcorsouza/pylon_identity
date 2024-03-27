@@ -3,7 +3,7 @@ from pylon.config.exceptions.http import BadRequestException, NotFoundException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from pylon_identity.api.admin.models import Task
+from pylon_identity.api.admin.models import Task,Action
 from pylon_identity.api.admin.schemas.task_schema import TaskPublic, TaskSchema
 
 
@@ -15,24 +15,6 @@ class TaskService(BaseService):
     def __init__(self, session: Session = None):
         super().__init__(session, Task, TaskSchema)
         self.public_schema = TaskPublic
-
-    def create(self, task_data) -> Task:
-        """
-        Cria uma nova tarefa com os dados fornecidos.
-
-        Args:
-            task_data (TaskSchema): Dados da tarefa a serem criados.
-
-        Returns:
-            Task: a tarefa criado.
-        """
-        db_task = self._get_by_tag_name(task_data.tag_name)
-        if db_task:
-            raise BadRequestException('Tag Name already registered')
-
-        task = Task(**task_data.model_dump())
-        self._create(task)
-        return self._get_by_id(task.id)
 
     def get_all(self):
         """
@@ -63,6 +45,31 @@ class TaskService(BaseService):
             return task
         raise NotFoundException('Task not found.')
 
+    def create(self, task_data) -> Task:
+        """
+        Cria uma nova tarefa com os dados fornecidos.
+
+        Args:
+            task_data (TaskSchema): Dados da tarefa a serem criados.
+
+        Returns:
+            Task: a tarefa criado.
+        """
+        db_task = self._get_by_tag_name(task_data.tag_name)
+        if db_task:
+            raise BadRequestException('Tag Name already registered')
+        
+        task_dict = task_data.dict(exclude={'actions'})
+        task = Task(**task_dict)
+        
+        if task_data.actions:
+            for action_data in task_data.actions:
+                task.actions.append(Action(name = action_data.name))
+        
+           
+        self._create(task)
+        return self._get_by_id(task.id)
+
     def update(self, task_id: int, task_data):
         """
         Atualiza os dados de uma tarefa.
@@ -81,7 +88,17 @@ class TaskService(BaseService):
         if not task or task_id < 1:
             raise NotFoundException('Task not found.')   # pragma: no cover
 
-        self._update(task, task_data)
+        task_dict = task_data.dict(exclude={'actions'})
+        if task:            
+            for key, value in task_dict.items():
+                setattr(task,key, value)
+                
+        task.actions.clear()
+        if task_data.actions:
+            for action_data in task_data.actions:
+                task.actions.append(Action(name = action_data.name))
+                   
+        self.session.commit()
         return task
 
     def delete(self, task_id: int):

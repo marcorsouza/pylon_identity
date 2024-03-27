@@ -1,4 +1,11 @@
+from typing import List, Optional
+
 from pydantic import BaseModel
+
+from pylon_identity.api.admin.schemas.action_schema import (
+    ActionPublic,
+    ActionCreate
+)
 
 
 class TaskSchema(BaseModel):
@@ -7,6 +14,7 @@ class TaskSchema(BaseModel):
     icon: str
     show_in_menu: str
     menu_title: str
+    actions: Optional[List[ActionCreate]]
 
 
 class TaskUpdate(BaseModel):
@@ -15,6 +23,7 @@ class TaskUpdate(BaseModel):
     icon: str
     show_in_menu: str
     menu_title: str
+    actions: Optional[List[ActionCreate]]
 
 
 class TaskPublic(BaseModel):
@@ -24,7 +33,8 @@ class TaskPublic(BaseModel):
     icon: str
     show_in_menu: str
     menu_title: str
+    actions: List[ActionPublic]
 
 
 class TaskList(BaseModel):
-    tasks: list[TaskPublic]
+    tasks: List[TaskPublic]
