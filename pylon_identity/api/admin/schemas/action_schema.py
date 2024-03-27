@@ -1,9 +1,12 @@
 from typing import Optional
+
 from pydantic import BaseModel
+
 
 class ActionCreate(BaseModel):
     name: str
-    
+
+
 class ActionSchema(BaseModel):
     name: str
     task_id: Optional[int]

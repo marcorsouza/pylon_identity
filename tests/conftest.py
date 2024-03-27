@@ -6,7 +6,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from pylon_identity.api.admin.models import Application, Base, Role, Task, User
+from pylon_identity.api.admin.models import (
+    Action,
+    Application,
+    Base,
+    Role,
+    Task,
+    User,
+)
 from pylon_identity.app import app
 
 
@@ -141,7 +148,16 @@ def role(session, application):
 @pytest.fixture
 def task(session):
     task = Task(
-        name='Task 1', tag_name='TSK1', icon='', show_in_menu='', menu_title=''
+        name='Task 1',
+        tag_name='TSK1',
+        icon='',
+        show_in_menu='',
+        menu_title='',
+        actions=[
+            Action(name='ACTION 1'),
+            Action(name='ACTION 2'),
+            Action(name='ACTION 3'),
+        ],
     )
     session.add(task)
     session.commit()

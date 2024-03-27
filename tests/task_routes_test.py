@@ -8,6 +8,7 @@ def test_create_task(client, task_data):
     result = response.json()
     assert result['name'] == 'Task 1'
     assert result['tag_name'] == 'TSK1'
+    assert len(result['actions']) == 3
 
 
 def test_create_task_with_existing_tag_name(client, task, task_data):
