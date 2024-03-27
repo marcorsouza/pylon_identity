@@ -58,13 +58,14 @@ def test_update_task(client, task, token):
             'icon': '',
             'show_in_menu': '',
             'menu_title': '',
-            'actions': [],
+            'actions': [{'name': 'action'}],
         },
     )
     assert response.status_code == 200
     result = response.json()
     assert result['name'] == 'Task 2'
     assert result['tag_name'] == 'TSK2'
+    assert len(result['actions']) == 1
 
 
 def test_update_task_nonexistent_task(client):
