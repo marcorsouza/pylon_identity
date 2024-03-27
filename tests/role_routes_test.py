@@ -67,3 +67,24 @@ def test_delete_role(client, role, token):
 def test_delete_role_nonexistent_role(client):
     response = client.delete('/admin/roles/99')
     assert response.status_code == 404
+
+
+def test_add_and_del_actions_to_role(client, role, task, token):
+    response = client.post(
+        '/admin/roles/add_actions_to_role/1',
+        # headers={'Authorization': f'Bearer {token}'},
+        json={'actions': [{'id': 1}]},
+    )
+    assert response.status_code == 200
+    result = response.json()
+    assert result['name'] == 'Admin'
+    assert len(result['actions']) == 1
+
+    response = client.put(
+        '/admin/roles/del_actions_to_role/1',
+        # headers={'Authorization': f'Bearer {token}'},
+        json={'actions': [{'id': 19}]},
+    )
+    assert response.status_code == 200
+    result = response.json()
+    assert len(result['actions']) == 1

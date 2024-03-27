@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.controllers.role_controller import RoleController
 from pylon_identity.api.admin.schemas.role_schema import (
+    RoleAction,
     RoleList,
     RolePublic,
     RoleSchema,
@@ -74,3 +75,21 @@ async def delete_role(
     role_controller: RoleController = Depends(get_role_controller),
 ):
     return await role_controller.delete(role_id)
+
+
+@role_router.post('/add_actions_to_role/{role_id}', response_model=RolePublic)
+async def add_actions_to_role(
+    role_id: int,
+    action_in: RoleAction = Body(...),
+    role_controller: RoleController = Depends(get_role_controller),
+):
+    return await role_controller.add_actions_to_role(role_id, action_in)
+
+
+@role_router.put('/del_actions_to_role/{role_id}', response_model=RolePublic)
+async def del_actions_to_role(
+    role_id: int,
+    action_in: RoleAction = Body(...),
+    role_controller: RoleController = Depends(get_role_controller),
+):
+    return await role_controller.del_actions_to_role(role_id, action_in)

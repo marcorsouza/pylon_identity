@@ -12,6 +12,14 @@ user_role = Table(
     Column('role_id', ForeignKey('roles.id')),
 )
 
+# Tabela intermediária para representar o relacionamento N x N entre Role e Action
+role_action = Table(
+    'role_action',
+    Base.metadata,
+    Column('role_id', ForeignKey('roles.id')),
+    Column('action_id', ForeignKey('actions.id')),
+)
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -70,6 +78,10 @@ class Role(Base):
 
     # Definindo relacionamento com User
     users = relationship('User', secondary=user_role, back_populates='roles')
+    # Definindo relacionamento com Role
+    actions = relationship(
+        'Action', secondary=role_action, back_populates='roles'
+    )
 
 
 class Task(Base):
@@ -94,3 +106,8 @@ class Action(Base):
     task_id: Mapped[int] = mapped_column(ForeignKey('tasks.id'))
 
     task: Mapped[Task] = relationship(back_populates='actions')
+
+    # Definindo relacionamento com Role
+    roles = relationship(
+        'Role', secondary=role_action, back_populates='actions'
+    )

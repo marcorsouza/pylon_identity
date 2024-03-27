@@ -23,5 +23,9 @@ class ActionPublic(BaseModel):
     task_id: int
 
 
+class ActionSimple(BaseModel):
+    id: int
+
+
 class ActionList(BaseModel):
     actions: list[ActionPublic]
