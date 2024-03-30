@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 pylon = {git = "https://github.com/marcorsouza/pylon.git"}
 alembic = "^1.13.1"
+pytz = "^2024.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"
