@@ -996,7 +996,7 @@ files = [
 
 [[package]]
 name = "pylon"
-version = "0.1.2"
+version = "0.1.4"
 description = ""
 optional = false
 python-versions = "^3.11"
@@ -1018,8 +1018,8 @@ uvicorn = "^0.27.1"
 [package.source]
 type = "git"
 url = "https://github.com/marcorsouza/pylon.git"
-reference = "master"
-resolved_reference = "5e07e3130a96cf6c5b58b5b39d882684e7b8bf06"
+reference = "HEAD"
+resolved_reference = "f4e42b898345d91d6118fbc4a9908c5c431a5e71"
 
 [[package]]
 name = "pytest"
@@ -1353,4 +1353,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "101c7965b2707aeea17e22c2b0d055360ae7ce3ae610abc52dd3da33bc33199e"
+content-hash = "d18f77a84368fd82d1ed081f0cb4172fbc9f7ded75c31d1a35d3e20b99329d40"
