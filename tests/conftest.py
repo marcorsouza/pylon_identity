@@ -1,15 +1,15 @@
 import pytest
 from fastapi.testclient import TestClient
+from pylon.api.models.base import Base
 from pylon.config.helpers import get_session
 from pylon.utils.encryption_utils import encrypt_value
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from pylon_identity.api.admin.models import (
+from pylon_identity.api.admin.models import (  # Base,
     Action,
     Application,
-    Base,
     Role,
     Task,
     User,
@@ -53,17 +53,36 @@ def task_data():
     }
 
 
+metadata = Base.metadata
+
+
+def truncate_all_tables(connectable):
+    with connectable.connect() as connection:
+        Session = sessionmaker(bind=connection)
+        session = Session()
+        session.execute(text('SET FOREIGN_KEY_CHECKS = 0;'))
+        for table in metadata.sorted_tables:
+            try:
+                session.execute(table.delete())
+            except Exception:
+                pass
+        session.execute(text('SET FOREIGN_KEY_CHECKS = 1;'))
+        session.commit()
+
+
 @pytest.fixture
 def session():
     engine = create_engine(
-        'sqlite:///:memory:',
-        connect_args={'check_same_thread': False},
+        'mysql://root:1234@localhost:3306/test_meudb',
+        # connect_args={'check_same_thread': False},
         poolclass=StaticPool,
     )
     Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    Base.metadata.create_all(engine)
+    # Base.metadata.create_all(engine)
+    truncate_all_tables(engine)
     yield Session()
-    Base.metadata.drop_all(engine)
+    # Base.metadata.drop_all(engine)
+    truncate_all_tables(engine)
 
 
 @pytest.fixture

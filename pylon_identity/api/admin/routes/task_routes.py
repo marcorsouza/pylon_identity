@@ -6,6 +6,7 @@ from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.controllers.task_controller import TaskController
+from pylon_identity.api.admin.schemas.action_schema import ActionCreate
 from pylon_identity.api.admin.schemas.task_schema import (
     TaskList,
     TaskPublic,
@@ -74,3 +75,23 @@ async def delete_task(
     task_controller: TaskController = Depends(get_task_controller),
 ):
     return await task_controller.delete(task_id)
+
+
+@task_router.post('/add_action_to_task/{task_id}', response_model=TaskPublic)
+async def add_action_to_task(
+    task_id: int,
+    action_in: ActionCreate = Body(...),
+    task_controller: TaskController = Depends(get_task_controller),
+):
+    return await task_controller.add_action_to_task(task_id, action_in)
+
+
+@task_router.put(
+    '/delete_action_from_task/{task_id}', response_model=TaskPublic
+)
+async def delete_action_from_task(
+    task_id: int,
+    action_in: ActionCreate = Body(...),
+    task_controller: TaskController = Depends(get_task_controller),
+):
+    return await task_controller.delete_action_from_task(task_id, action_in)

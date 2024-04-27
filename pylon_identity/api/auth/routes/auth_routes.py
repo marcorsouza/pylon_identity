@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from pylon.config.helpers import get_session
 from sqlalchemy.orm import Session
 
@@ -14,8 +14,6 @@ auth_router = APIRouter(
     tags=['Auth'],
 )
 
-# Definir esquema de segurança
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/token')
 
 user_service = None
 # Função de fábrica para criar AuthController com UserService injetado
@@ -37,13 +35,19 @@ async def login_for_access_token(
     if user is None:
         return {'error': 'Usuário ou senha inválidos'}   # pragma: no cover
 
-    token_data  = create_access_token(data={'sub': user.username}) 
+    user_info = {
+        'username': user.username,
+        'acronym': 'APS'  # app_by_acronym.acronym
+        # outras informações que você deseja incluir no token
+    }
+
+    token_data = create_access_token(data=user_info)
     access_token = token_data['access_token']
     expire = token_data['expire']
 
     return {
-        'access_token': access_token, 
+        'access_token': access_token,
         'token_type': 'bearer',
-        'expire_at': expire, 
-        'user': user # Formato de data e hora como string
+        'expire_at': expire,
+        'user': user,  # Formato de data e hora como string
     }

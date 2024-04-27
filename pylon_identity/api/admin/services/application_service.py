@@ -20,6 +20,7 @@ class ApplicationService(BaseService):
         self.public_schema = ApplicationPublic
 
     def create(self, application_data) -> Application:
+
         """
         Cria uma nova aplicação com os dados fornecidos.
 
@@ -29,13 +30,17 @@ class ApplicationService(BaseService):
         Returns:
             Application: a aplicação criado.
         """
+
         db_application = self._get_by_acronym(application_data.acronym)
         if db_application:
             raise BadRequestException('Acronym already registered')
 
-        application = Application(**application_data.model_dump())
-        self._create(application)
-        return self._get_by_id(application.id)
+        try:
+            application = Application(**application_data.model_dump())
+            self._create(application)
+            return self._get_by_id(application.id)
+        except Exception as ex:
+            raise BadRequestException('Error')
 
     def get_all(self):
         """

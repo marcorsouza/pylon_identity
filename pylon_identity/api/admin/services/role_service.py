@@ -1,5 +1,5 @@
 from pylon.api.services.base_service import BaseService
-from pylon.config.exceptions.http import NotFoundException
+from pylon.config.exceptions.http import BadRequestException, NotFoundException
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.models import Action, Role
@@ -29,10 +29,12 @@ class RoleService(BaseService):
         Returns:
             Role: a regra criada.
         """
-
-        role = Role(**role_data.model_dump())
-        self._create(role)
-        return self._get_by_id(role.id)
+        try:
+            role = Role(**role_data.model_dump())
+            self._create(role)
+            return self._get_by_id(role.id)
+        except Exception:
+            raise BadRequestException('Error inserting role')
 
     def get_all(self):
         """
@@ -77,12 +79,15 @@ class RoleService(BaseService):
         Raises:
             HTTPException: Se a regra não for encontrada.
         """
-        role = self._get_by_id(role_id)
-        if not role or role_id < 1:
-            raise NotFoundException('Role not found.')   # pragma: no cover
+        try:
+            role = self._get_by_id(role_id)
+            if not role or role_id < 1:
+                raise NotFoundException('Role not found.')   # pragma: no cover
 
-        self._update(role, role_data)
-        return role
+            self._update(role, role_data)
+            return role
+        except Exception:
+            raise BadRequestException('Error updating role')
 
     def delete(self, role_id: int):
         """

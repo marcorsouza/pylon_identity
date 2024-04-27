@@ -12,6 +12,7 @@ from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+print("Conexão DB:", Settings().DATABASE_URL)
 config = context.config
 config.set_main_option('sqlalchemy.url', Settings().DATABASE_URL)
 

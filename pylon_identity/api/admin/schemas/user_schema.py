@@ -36,10 +36,10 @@ class UserRole(BaseModel):
 
 class UserList(BaseModel):
     users: list[UserPublic]
-    
+
+
 class TokenAndUserPublic(BaseModel):
-    access_token:str
-    token_type:str
+    access_token: str
+    token_type: str
     expire_at: datetime
-    user:UserPublic
-    
+    user: UserPublic

@@ -10,6 +10,7 @@ python = "^3.11"
 pylon = {git = "https://github.com/marcorsouza/pylon.git"}
 alembic = "^1.13.1"
 pytz = "^2024.1"
+mysqlclient = "^2.2.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"

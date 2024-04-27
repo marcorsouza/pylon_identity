@@ -12,7 +12,7 @@ class TaskSchema(BaseModel):
     name: str
     tag_name: str
     icon: str
-    show_in_menu: str
+    show_in_menu: int
     menu_title: str
     actions: Optional[List[ActionCreate]]
 
@@ -21,9 +21,9 @@ class TaskUpdate(BaseModel):
     name: str
     tag_name: str
     icon: str
-    show_in_menu: str
+    show_in_menu: int
     menu_title: str
-    actions: Optional[List[ActionCreate]]
+    # actions: Optional[List[ActionCreate]]
 
 
 class TaskPublic(BaseModel):
@@ -31,7 +31,7 @@ class TaskPublic(BaseModel):
     name: str
     tag_name: str
     icon: str
-    show_in_menu: str
+    show_in_menu: int
     menu_title: str
     actions: List[ActionPublic]
 

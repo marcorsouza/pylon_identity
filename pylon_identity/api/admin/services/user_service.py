@@ -37,10 +37,17 @@ class UserService(BaseService):
         if db_user:
             raise BadRequestException('Username already registered')
 
-        user_data.password = encrypt_value(user_data.password)
-        user = User(**user_data.model_dump())
-        self._create(user)
-        return self._get_by_id(user.id)
+        db_user = self._get_by_email(user_data.email)
+        if db_user:
+            raise BadRequestException('E-mail already registered')
+
+        try:
+            user_data.password = encrypt_value(user_data.password)
+            user = User(**user_data.model_dump())
+            self._create(user)
+            return self._get_by_id(user.id)
+        except Exception:
+            raise BadRequestException('Error inserting user')
 
     def get_all(self):
         """
@@ -89,8 +96,11 @@ class UserService(BaseService):
         if not user or user_id < 1:
             raise NotFoundException('User not found.')   # pragma: no cover
 
-        self._update(user, user_data)
-        return user
+        try:
+            self._update(user, user_data)
+            return user
+        except Exception:
+            raise BadRequestException('Error updating user')
 
     def delete(self, user_id: int):
         """
@@ -119,6 +129,15 @@ class UserService(BaseService):
             .filter(
                 func.lower(self.model_data.username) == func.lower(username)
             )
+            .first()
+        )
+        return user
+
+    def _get_by_email(self, email):
+        # Consulta o banco de dados para obter o usuário pelo email
+        user = (
+            self.session.query(self.model_data)
+            .filter(func.lower(self.model_data.email) == func.lower(email))
             .first()
         )
         return user

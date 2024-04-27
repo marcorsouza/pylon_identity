@@ -4,6 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.models import Action, Task
+from pylon_identity.api.admin.schemas.action_schema import ActionCreate
 from pylon_identity.api.admin.schemas.task_schema import TaskPublic, TaskSchema
 
 
@@ -55,19 +56,22 @@ class TaskService(BaseService):
         Returns:
             Task: a tarefa criado.
         """
-        db_task = self._get_by_tag_name(task_data.tag_name)
+        db_task = self._find_by_field('tag_name', task_data.tag_name)
         if db_task:
             raise BadRequestException('Tag Name already registered')
 
-        task_dict = task_data.dict(exclude={'actions'})
-        task = Task(**task_dict)
+        try:
+            task_dict = task_data.dict(exclude={'actions'})
+            task = Task(**task_dict)
 
-        if task_data.actions:
-            for action_data in task_data.actions:
-                task.actions.append(Action(name=action_data.name))
+            if task_data.actions:
+                for action_data in task_data.actions:
+                    task.actions.append(Action(name=action_data.name))
 
-        self._create(task)
-        return self._get_by_id(task.id)
+            self._create(task)
+            return self._get_by_id(task.id)
+        except Exception:
+            raise BadRequestException(f'Error inserting action')
 
     def update(self, task_id: int, task_data):
         """
@@ -75,7 +79,7 @@ class TaskService(BaseService):
 
         Args:
             task_id (int): ID da tarefa a ser atualizada.
-            task_data (TaskPublic): Novos dados da tarefa.
+            task_data (TaskUpdate): Novos dados da tarefa.
 
         Returns:
             Task: a tarefa atualizada.
@@ -87,18 +91,16 @@ class TaskService(BaseService):
         if not task or task_id < 1:
             raise NotFoundException('Task not found.')   # pragma: no cover
 
-        task_dict = task_data.dict(exclude={'actions'})
-        if task:
-            for key, value in task_dict.items():
-                setattr(task, key, value)
+        try:
+            task_dict = task_data.dict(exclude={'actions'})
+            if task:
+                for key, value in task_dict.items():
+                    setattr(task, key, value)
 
-        task.actions.clear()
-        if task_data.actions:
-            for action_data in task_data.actions:
-                task.actions.append(Action(name=action_data.name))
-
-        self.session.commit()
-        return task
+            self.session.commit()
+            return task
+        except Exception:
+            raise BadRequestException('Error updating action')
 
     def delete(self, task_id: int):
         """
@@ -120,13 +122,59 @@ class TaskService(BaseService):
 
         return {'message': 'Task deleted'}
 
-    def _get_by_tag_name(self, tag_name):
-        # Consulta o banco de dados para obter a tarefa pelo tag_name
-        task = (
-            self.session.query(self.model_data)
-            .filter(
-                func.lower(self.model_data.tag_name) == func.lower(tag_name)
-            )
-            .first()
+    def add_action_to_task(self, task_id, action_in: ActionCreate):
+        """
+        Adiciona uma nova ação a uma tarefa específica.
+
+        Args:
+            task_id (int): ID da tarefa à qual a ação será adicionada.
+            action_in (ActionCreate): Nome da ação a ser adicionada.
+
+        Raises:
+            BadRequestException: Se a ação já existir ou a tarefa não for encontrada.
+        """
+        task = self._get_by_id(task_id)
+        if not task:
+            raise NotFoundException('Task not found')
+
+        # Verifica se a ação já existe na tarefa
+        if any(action.name == action_in.name for action in task.actions):
+            raise BadRequestException('Action already exists')
+
+        # Adiciona a nova ação se não existir
+        new_action = Action(name=action_in.name)
+        task.actions.append(new_action)
+        self.session.commit()
+        return task
+
+    def delete_action_from_task(self, task_id, action_in: ActionCreate):
+        """
+        Remove uma ação de uma tarefa específica.
+
+        Args:
+            task_id (int): ID da tarefa da qual a ação será removida.
+            action_name (str): Nome da ação a ser removida.
+
+        Raises:
+            BadRequestException: Se a ação não for encontrada ou a tarefa não for encontrada.
+        """
+        task = self._get_by_id(task_id)
+        if not task:
+            raise NotFoundException('Task not found')
+
+        # Encontra a ação pelo nome
+        action_to_remove = next(
+            (
+                action
+                for action in task.actions
+                if action.name == action_in.name
+            ),
+            None,
         )
+        if not action_to_remove:
+            raise NotFoundException('Action not found')
+
+        # Remove a ação da tarefa
+        task.actions.remove(action_to_remove)
+        self.session.commit()
         return task

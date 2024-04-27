@@ -1,0 +1,14 @@
+# Use uma imagem base do MySQL ou MariaDB
+FROM mysql:latest
+
+# Defina a senha do usuário root do MySQL
+ENV MYSQL_ROOT_PASSWORD=1234
+
+# Copie o arquivo SQL de inicialização para o contêiner (se necessário)
+#COPY db.sql /docker-entrypoint-initdb.d/
+
+# Exponha a porta do MySQL (opcional, se desejar acessar externamente)
+EXPOSE 3306
+
+# Comando de inicialização do contêiner (padrão para a imagem do MySQL)
+CMD ["mysqld"]

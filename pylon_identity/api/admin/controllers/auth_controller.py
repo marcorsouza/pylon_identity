@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+
 from pylon_identity.api.admin.services.user_service import UserService
 
 
@@ -9,9 +10,12 @@ class AuthController:
 
     def login(self, username, password):
         return self.__authenticate_user(username, password)
-    
+
     def model_to_dict(self, model):
-        return {column.name: getattr(model, column.name) for column in model.__table__.columns}
+        return {
+            column.name: getattr(model, column.name)
+            for column in model.__table__.columns
+        }
 
     # Funções auxiliares (substituem acesso a banco de dados)
     def __authenticate_user(self, username: str, password: str):
@@ -41,5 +45,5 @@ class AuthController:
 
         self.user_service.update_last_login_date(user)
         self.user_service.reset_failed_attempts(user)
-        
+
         return user
