@@ -39,7 +39,7 @@ class ApplicationService(BaseService):
             application = Application(**application_data.model_dump())
             self._create(application)
             return self._get_by_id(application.id)
-        except Exception as ex:
+        except Exception:
             raise BadRequestException('Error')
 
     def get_all(self):

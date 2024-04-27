@@ -1,6 +1,5 @@
 from pylon.api.services.base_service import BaseService
 from pylon.config.exceptions.http import BadRequestException, NotFoundException
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.models import Action, Task
@@ -71,7 +70,7 @@ class TaskService(BaseService):
             self._create(task)
             return self._get_by_id(task.id)
         except Exception:
-            raise BadRequestException(f'Error inserting action')
+            raise BadRequestException('Error inserting action')
 
     def update(self, task_id: int, task_data):
         """

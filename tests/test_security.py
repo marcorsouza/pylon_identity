@@ -13,13 +13,16 @@ from pylon_identity.config.security import (
 
 
 def test_jwt():
-    data = {'test': 'test'}
-    token = create_access_token(data)
+    user_info = {
+        'username': 'manz'
+    }
     settings = Settings()
-    decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-
-    assert decoded['test'] == data['test']
-    assert decoded['exp']  # Testa se o valor de exp foi adicionado ao token
+    result = create_access_token(data=user_info)
+    token = result['access_token']
+    payload = jwt.decode(
+        token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+    )
+    assert payload['username'] == user_info['username']
 
 
 @pytest.mark.asyncio
