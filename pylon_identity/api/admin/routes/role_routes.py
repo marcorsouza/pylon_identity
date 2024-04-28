@@ -1,11 +1,8 @@
-from typing import Annotated
-
 from fastapi import APIRouter, Body, Depends
 from pylon.api.schemas.message_schema import Message
-from pylon.config.helpers import get_session
-from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.controllers.role_controller import RoleController
+from pylon_identity.api.admin.dependencies import get_role_controller
 from pylon_identity.api.admin.schemas.role_schema import (
     RoleAction,
     RoleList,
@@ -13,24 +10,12 @@ from pylon_identity.api.admin.schemas.role_schema import (
     RoleSchema,
     RoleUpdate,
 )
-from pylon_identity.api.admin.services.role_service import RoleService
 
 # Criar roteador
 role_router = APIRouter(
     prefix='/admin/roles',
     tags=['Roles'],
 )
-
-role_service = None
-
-CurrentSession = Annotated[Session, Depends(get_session)]
-# Função de fábrica para criar RoleController com RoleService injetado
-def get_role_controller(
-    session: CurrentSession,
-):
-    role_service = RoleService(session)
-    return RoleController(role_service)
-
 
 # Rota de criação de regra
 @role_router.post('/', response_model=RolePublic, status_code=201)

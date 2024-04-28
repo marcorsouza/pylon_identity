@@ -1,12 +1,10 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
 from pylon.api.schemas.message_schema import Message
-from pylon.config.helpers import get_session
-from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.controllers.user_controller import UserController
+from pylon_identity.api.admin.dependencies import get_user_controller
 from pylon_identity.api.admin.models import User
 from pylon_identity.api.admin.schemas.user_schema import (
     UserList,
@@ -15,7 +13,6 @@ from pylon_identity.api.admin.schemas.user_schema import (
     UserSchema,
     UserUpdate,
 )
-from pylon_identity.api.admin.services.user_service import UserService
 from pylon_identity.config.security import get_current_user
 
 # Criar roteador
@@ -25,18 +22,6 @@ user_router = APIRouter(
 )
 
 # Definir esquema de segurança
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/token')
-user_service = None
-
-CurrentSession = Annotated[Session, Depends(get_session)]
-# Função de fábrica para criar UserController com UserService injetado
-def get_user_controller(
-    session: CurrentSession,
-):
-    user_service = UserService(session)
-    return UserController(user_service)
-
-
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 # Rota de criação de usuário

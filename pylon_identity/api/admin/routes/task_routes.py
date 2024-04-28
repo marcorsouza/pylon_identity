@@ -1,11 +1,8 @@
-from typing import Annotated
-
 from fastapi import APIRouter, Body, Depends
 from pylon.api.schemas.message_schema import Message
-from pylon.config.helpers import get_session
-from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.controllers.task_controller import TaskController
+from pylon_identity.api.admin.dependencies import get_task_controller
 from pylon_identity.api.admin.schemas.action_schema import ActionCreate
 from pylon_identity.api.admin.schemas.task_schema import (
     TaskList,
@@ -13,24 +10,12 @@ from pylon_identity.api.admin.schemas.task_schema import (
     TaskSchema,
     TaskUpdate,
 )
-from pylon_identity.api.admin.services.task_service import TaskService
 
 # Criar roteador
 task_router = APIRouter(
     prefix='/admin/tasks',
     tags=['Tasks'],
 )
-
-task_service = None
-
-CurrentSession = Annotated[Session, Depends(get_session)]
-# Função de fábrica para criar TaskController com TaskService injetado
-def get_task_controller(
-    session: CurrentSession,
-):
-    task_service = TaskService(session)
-    return TaskController(task_service)
-
 
 # Rota de criação de aplicação
 @task_router.post('/', response_model=TaskPublic, status_code=201)

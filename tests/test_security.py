@@ -13,9 +13,7 @@ from pylon_identity.config.security import (
 
 
 def test_jwt():
-    user_info = {
-        'username': 'manz'
-    }
+    user_info = {'username': 'manz'}
     settings = Settings()
     result = create_access_token(data=user_info)
     token = result['access_token']
