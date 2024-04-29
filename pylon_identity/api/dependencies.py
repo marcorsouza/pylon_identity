@@ -15,6 +15,7 @@ from pylon_identity.api.admin.services import (
     TaskService,
     UserService,
 )
+from pylon_identity.api.auth.controllers.auth_controller import AuthController
 
 
 def get_application_controller(
@@ -43,3 +44,10 @@ def get_user_controller(
 ) -> UserController:
     user_service = UserService(session)
     return UserController(user_service)
+
+
+def get_auth_controller(
+    session: Session = Depends(get_session),
+) -> UserController:
+    user_service = UserService(session)
+    return AuthController(user_service)

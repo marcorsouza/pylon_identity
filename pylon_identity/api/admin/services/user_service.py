@@ -7,11 +7,13 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.models import Role, User
+from pylon_identity.api.admin.models.models import UserPermissions
 from pylon_identity.api.admin.schemas.user_schema import (
     UserPublic,
     UserRole,
     UserSchema,
 )
+from pylon_identity.api.auth.schemas.auth_schema import CheckPermissionSchema
 
 
 class UserService(BaseService):
@@ -265,3 +267,24 @@ class UserService(BaseService):
 
         self.session.commit()
         return self._get_by_id(user.id)
+
+    def check_permission(self, permission_data: CheckPermissionSchema):
+        # Criar o filtro utilizando os dados
+        user_permission = (
+            self.session.query(UserPermissions)
+            .filter_by(
+                username=permission_data.username,
+                tag_name=permission_data.tag_name,
+                acronym=permission_data.acronym,
+                action_name=permission_data.action_name,
+            )
+            .first()
+        )
+
+        # Você pode agora verificar se um objeto de permissão foi encontrado e agir conforme necessário
+        if user_permission:
+            # Faça algo com a permissão encontrada
+            return True
+        else:
+            # Lide com a situação onde a permissão não é encontrada
+            return False
