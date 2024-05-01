@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Body, Depends
+from pylon.api.middlewares.permission_checker import PermissionChecker
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.role_controller import RoleController
@@ -21,6 +22,7 @@ role_router = APIRouter(
 # Rota de criação de regra
 @role_router.post(
     '/',
+    dependencies=[Depends(PermissionChecker('CREATE', 'ROLES'))],
     response_model=RolePublic,
     status_code=201,
     summary='Create a new role',
@@ -37,6 +39,7 @@ async def create_role(
 # Rota de recuperação de todas as regras
 @role_router.get(
     '/',
+    dependencies=[Depends(PermissionChecker('READ', 'ROLES'))],
     response_model=RoleList,
     summary='Retrieve all roles',
     description='Retrieves a list of all roles in the system.',
@@ -50,6 +53,7 @@ async def get_roles(
 
 @role_router.post(
     '/paged-list',
+    dependencies=[Depends(PermissionChecker('READ', 'ROLES'))],
     response_model=RolePagedList,
     summary='Paginated role retrieval',
     description='Retrieves a paginated list of all roles currently stored in the system. This endpoint is intended for administrative use only and allows for filtering and pagination of role records.',
@@ -65,6 +69,7 @@ async def paged_list(
 # Rota de recuperação de uma regra por ID
 @role_router.get(
     '/{role_id}',
+    dependencies=[Depends(PermissionChecker('READ', 'ROLES'))],
     response_model=RolePublic,
     summary='Get a role by ID',
     description='Retrieves a role by its unique ID.',
@@ -80,6 +85,7 @@ async def get_role(
 # Rota de atualização de uma regra por ID
 @role_router.put(
     '/{role_id}',
+    dependencies=[Depends(PermissionChecker('UPDATE', 'ROLES'))],
     response_model=RolePublic,
     summary='Update a role',
     description='Updates the details of an existing role identified by its ID.',
@@ -96,6 +102,7 @@ async def update_role(
 # Rota de exclusão de uma regra por ID
 @role_router.delete(
     '/{role_id}',
+    dependencies=[Depends(PermissionChecker('DELETE', 'ROLES'))],
     response_model=Message,
     summary='Delete a role',
     description='Deletes a role from the system based on the provided role ID.',
@@ -110,6 +117,7 @@ async def delete_role(
 
 @role_router.post(
     '/add_actions_to_role/{role_id}',
+    dependencies=[Depends(PermissionChecker('CREATE_ROLES', 'ROLES'))],
     response_model=RolePublic,
     summary='Add actions to a role',
     description='Adds specified actions to a role based on the role ID.',
@@ -125,6 +133,7 @@ async def add_actions_to_role(
 
 @role_router.put(
     '/del_actions_to_role/{role_id}',
+    dependencies=[Depends(PermissionChecker('DELETE_ROLES', 'ROLES'))],
     response_model=RolePublic,
     summary='Remove actions from a role',
     description='Removes specified actions from a role based on the role ID.',
