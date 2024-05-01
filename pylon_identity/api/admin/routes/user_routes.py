@@ -4,15 +4,16 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.user_controller import UserController
-from pylon_identity.api.dependencies import get_user_controller
 from pylon_identity.api.admin.models import User
 from pylon_identity.api.admin.schemas.user_schema import (
     UserList,
+    UserPagedList,
     UserPublic,
     UserRole,
     UserSchema,
     UserUpdate,
 )
+from pylon_identity.api.dependencies import get_user_controller
 from pylon_identity.config.security import get_current_user
 
 # Criar roteador
@@ -52,6 +53,20 @@ async def get_users(
     user_controller: UserController = Depends(get_user_controller),
 ):
     return await user_controller.get_all()
+
+
+@user_router.post(
+    '/paged-list',
+    response_model=UserPagedList,
+    summary='Paginated user retrieval',
+    description='Retrieves a paginated list of all users currently stored in the system. This endpoint is intended for administrative use only and allows for filtering and pagination of user records.',
+    response_description='A paginated list containing user details, including metadata about the pagination such as current page and total records.',
+)
+async def paged_list(
+    filters: dict,
+    user_controller: UserController = Depends(get_user_controller),
+):
+    return await user_controller.paged_list(filters)
 
 
 # Rota de recuperação de um usuário por ID

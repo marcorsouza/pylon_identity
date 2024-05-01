@@ -62,6 +62,9 @@ class UserService(BaseService):
         results = self._get_all()
         return {'users': results}
 
+    def paged_list(self, filters=None):
+        return self._paged_list(filters)
+
     def get_by_id(self, user_id: int):
         """
         Obtém um usuário pelo ID.

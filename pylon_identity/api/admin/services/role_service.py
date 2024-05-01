@@ -47,6 +47,9 @@ class RoleService(BaseService):
         results = self._get_all()
         return {'roles': results}
 
+    def paged_list(self, filters=None):
+        return self._paged_list(filters)
+
     def get_by_id(self, role_id: int):
         """
         Obtém uma regra pelo ID.

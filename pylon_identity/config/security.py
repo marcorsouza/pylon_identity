@@ -1,17 +1,20 @@
 import datetime
 from datetime import timedelta
 
+import httpx
 import pytz
-from fastapi import Depends, Form, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends, Form
+from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
+from pylon.api.middlewares.permission_checker import oauth2_scheme
+from pylon.api.schemas.token_schema import TokenData
+from pylon.config.exceptions.http import UnauthorizedException
 from pylon.config.helpers import get_session
 from pylon.config.settings import Settings
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from pylon_identity.api.admin.models import User
-from pylon_identity.api.admin.schemas.token_schema import TokenData
 
 settings = Settings()
 
@@ -43,17 +46,12 @@ def create_access_token(data: dict):
     return {'access_token': encoded_jwt, 'expire': expire}
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
-
-
 async def get_current_user(
     session: Session = Depends(get_session),
     token: str = Depends(oauth2_scheme),
 ) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Could not validate credentials',
-        headers={'WWW-Authenticate': 'Bearer'},
+    credentials_exception = UnauthorizedException(
+        'Could not validate credentials'
     )
 
     try:

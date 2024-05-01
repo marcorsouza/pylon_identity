@@ -27,6 +27,9 @@ class TaskService(BaseService):
         results = self._get_all()
         return {'tasks': results}
 
+    def paged_list(self, filters=None):
+        return self._paged_list(filters)
+
     def get_by_id(self, task_id: int):
         """
         Obtém uma tarefa pelo ID.

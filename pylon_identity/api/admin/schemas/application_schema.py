@@ -22,3 +22,8 @@ class ApplicationPublic(BaseModel):
 
 class ApplicationList(BaseModel):
     applications: list[ApplicationPublic]
+
+
+class ApplicationPagedList(BaseModel):
+    data: list[ApplicationPublic]
+    total_records: int

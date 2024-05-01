@@ -36,3 +36,8 @@ class RoleAction(BaseModel):
 
 class RoleList(BaseModel):
     roles: list[RolePublic]
+
+
+class RolePagedList(BaseModel):
+    data: list[RolePublic]
+    total_records: int

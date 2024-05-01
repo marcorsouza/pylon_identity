@@ -1,13 +1,12 @@
-from pylon.api.schemas.message_schema import Message
-
-from fastapi import APIRouter,Body, Depends
+from fastapi import APIRouter, Body, Depends
 from fastapi.security import OAuth2PasswordRequestForm
+from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.schemas.user_schema import TokenAndUserPublic
 from pylon_identity.api.auth.controllers.auth_controller import AuthController
+from pylon_identity.api.auth.schemas.auth_schema import CheckPermissionSchema
 from pylon_identity.api.dependencies import get_auth_controller
 from pylon_identity.config.security import create_access_token
-from pylon_identity.api.auth.schemas.auth_schema import CheckPermissionSchema
 
 # Criar roteador
 auth_router = APIRouter(
@@ -42,8 +41,9 @@ async def login_for_access_token(
         'expire_at': expire,
         'user': user,  # Formato de data e hora como string
     }
-    
-@auth_router.post('/check-permission',response_model=Message)
+
+
+@auth_router.post('/check-permission', response_model=Message)
 async def check_user_permission(
     permission_data: CheckPermissionSchema = Body(...),
     auth_controller: AuthController = Depends(get_auth_controller),

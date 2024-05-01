@@ -2,14 +2,15 @@ from fastapi import APIRouter, Body, Depends
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.role_controller import RoleController
-from pylon_identity.api.dependencies import get_role_controller
 from pylon_identity.api.admin.schemas.role_schema import (
     RoleAction,
     RoleList,
+    RolePagedList,
     RolePublic,
     RoleSchema,
     RoleUpdate,
 )
+from pylon_identity.api.dependencies import get_role_controller
 
 # Criar roteador
 role_router = APIRouter(
@@ -45,6 +46,20 @@ async def get_roles(
     role_controller: RoleController = Depends(get_role_controller),
 ):
     return await role_controller.get_all()
+
+
+@role_router.post(
+    '/paged-list',
+    response_model=RolePagedList,
+    summary='Paginated role retrieval',
+    description='Retrieves a paginated list of all roles currently stored in the system. This endpoint is intended for administrative use only and allows for filtering and pagination of role records.',
+    response_description='A paginated list containing role details, including metadata about the pagination such as current page and total records.',
+)
+async def paged_list(
+    filters: dict,
+    role_controller: RoleController = Depends(get_role_controller),
+):
+    return await role_controller.paged_list(filters)
 
 
 # Rota de recuperação de uma regra por ID

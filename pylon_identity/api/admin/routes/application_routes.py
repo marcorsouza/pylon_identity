@@ -1,16 +1,18 @@
 from fastapi import APIRouter, Body, Depends
+from pylon.api.middlewares.permission_checker import PermissionChecker
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.application_controller import (
     ApplicationController,
 )
-from pylon_identity.api.dependencies import get_application_controller
 from pylon_identity.api.admin.schemas.application_schema import (
     ApplicationList,
+    ApplicationPagedList,
     ApplicationPublic,
     ApplicationSchema,
     ApplicationUpdate,
 )
+from pylon_identity.api.dependencies import get_application_controller
 
 # Criar roteador
 application_router = APIRouter(
@@ -22,6 +24,7 @@ application_router = APIRouter(
 # Rota de criação de aplicação
 @application_router.post(
     '/',
+    dependencies=[Depends(PermissionChecker('CREATE', 'APPLICATIONS'))],
     response_model=ApplicationPublic,
     status_code=201,
     summary='Create a new application',
@@ -40,6 +43,7 @@ async def create_application(
 # Rota de recuperação de todas as aplicações
 @application_router.get(
     '/',
+    dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
     response_model=ApplicationList,
     summary='Get all applications',
     description='Retrieves a list of all applications currently stored in the system.',
@@ -50,12 +54,31 @@ async def get_applications(
         get_application_controller
     ),
 ):
+    # print(f'result => {result}')
     return await application_controller.get_all()
+
+
+@application_router.post(
+    '/paged-list',
+    dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
+    response_model=ApplicationPagedList,
+    summary='Paginated application retrieval',
+    description='Retrieves a paginated list of all applications currently stored in the system. This endpoint is intended for administrative use only and allows for filtering and pagination of application records.',
+    response_description='A paginated list containing application details, including metadata about the pagination such as current page and total records.',
+)
+async def paged_list(
+    filters: dict,
+    application_controller: ApplicationController = Depends(
+        get_application_controller
+    ),
+):
+    return await application_controller.paged_list(filters)
 
 
 # Rota de recuperação de uma aplicação por ID
 @application_router.get(
     '/{application_id}',
+    dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
     response_model=ApplicationPublic,
     summary='Get an application by ID',
     description='Retrieves the details of an application specified by its ID.',
@@ -73,6 +96,7 @@ async def get_application(
 # Rota de atualização de uma aplicação por ID
 @application_router.put(
     '/{application_id}',
+    dependencies=[Depends(PermissionChecker('UPDATE', 'APPLICATIONS'))],
     response_model=ApplicationPublic,
     summary='Update an application',
     description='Updates the details of an existing application specified by its ID.',
@@ -91,6 +115,7 @@ async def update_application(
 # Rota de exclusão de uma aplicação por ID
 @application_router.delete(
     '/{application_id}',
+    dependencies=[Depends(PermissionChecker('DELETE', 'APPLICATIONS'))],
     response_model=Message,
     summary='Delete an application',
     description='Deletes an application from the system based on the provided application ID.',

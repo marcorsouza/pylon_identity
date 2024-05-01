@@ -2,14 +2,15 @@ from fastapi import APIRouter, Body, Depends
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.task_controller import TaskController
-from pylon_identity.api.dependencies import get_task_controller
 from pylon_identity.api.admin.schemas.action_schema import ActionCreate
 from pylon_identity.api.admin.schemas.task_schema import (
     TaskList,
+    TaskPagedList,
     TaskPublic,
     TaskSchema,
     TaskUpdate,
 )
+from pylon_identity.api.dependencies import get_task_controller
 
 # Criar roteador
 task_router = APIRouter(
@@ -45,6 +46,20 @@ async def get_tasks(
     task_controller: TaskController = Depends(get_task_controller),
 ):
     return await task_controller.get_all()
+
+
+@task_router.post(
+    '/paged-list',
+    response_model=TaskPagedList,
+    summary='Paginated task retrieval',
+    description='Retrieves a paginated list of all tasks currently stored in the system. This endpoint is intended for administrative use only and allows for filtering and pagination of task records.',
+    response_description='A paginated list containing task details, including metadata about the pagination such as current page and total records.',
+)
+async def paged_list(
+    filters: dict,
+    task_controller: TaskController = Depends(get_task_controller),
+):
+    return await task_controller.paged_list(filters)
 
 
 # Rota de recuperação de uma aplicação por ID

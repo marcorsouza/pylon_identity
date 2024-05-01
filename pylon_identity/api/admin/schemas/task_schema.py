@@ -38,3 +38,8 @@ class TaskPublic(BaseModel):
 
 class TaskList(BaseModel):
     tasks: List[TaskPublic]
+
+
+class TaskPagedList(BaseModel):
+    data: list[TaskPublic]
+    total_records: int

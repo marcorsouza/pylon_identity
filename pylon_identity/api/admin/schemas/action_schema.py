@@ -29,3 +29,8 @@ class ActionSimple(BaseModel):
 
 class ActionList(BaseModel):
     actions: list[ActionPublic]
+
+
+class ActionPagedList(BaseModel):
+    data: list[ActionPublic]
+    total_records: int

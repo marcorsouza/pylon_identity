@@ -38,6 +38,11 @@ class UserList(BaseModel):
     users: list[UserPublic]
 
 
+class UserPagedList(BaseModel):
+    data: list[UserPublic]
+    total_records: int
+
+
 class TokenAndUserPublic(BaseModel):
     access_token: str
     token_type: str

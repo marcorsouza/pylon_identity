@@ -1,7 +1,7 @@
 from pylon.api.controllers.base_controller import BaseController
+from pylon.api.middlewares.logger_middleware import log_decorator
 
 from pylon_identity.api.admin.services.user_service import UserService
-from pylon.api.middlewares.logger_middleware import log_decorator
 
 
 class UserController(BaseController):

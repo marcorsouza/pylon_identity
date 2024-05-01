@@ -561,13 +561,13 @@ trio = ["trio (>=0.22.0,<0.25.0)"]
 
 [[package]]
 name = "httpx"
-version = "0.26.0"
+version = "0.27.0"
 description = "The next generation HTTP client."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "httpx-0.26.0-py3-none-any.whl", hash = "sha256:8915f5a3627c4d47b73e8202457cb28f1266982d1159bd5779d86a80c0eab1cd"},
-    {file = "httpx-0.26.0.tar.gz", hash = "sha256:451b55c30d5185ea6b23c2c793abf9bb237d2a7dfb901ced6ff69ad37ec1dfaf"},
+    {file = "httpx-0.27.0-py3-none-any.whl", hash = "sha256:71d5465162c13681bff01ad59b2cc68dd838ea1f10e51574bac27103f00c91a5"},
+    {file = "httpx-0.27.0.tar.gz", hash = "sha256:a0cb88a46f32dc874e04ee956e4c2764aba2aa228f650b06788ba6bda2962ab5"},
 ]
 
 [package.dependencies]
@@ -1014,7 +1014,7 @@ files = [
 
 [[package]]
 name = "pylon"
-version = "0.1.5"
+version = "0.1.7"
 description = ""
 optional = false
 python-versions = "^3.11"
@@ -1025,6 +1025,7 @@ develop = false
 bcrypt = "^4.1.2"
 cryptography = "^42.0.3"
 fastapi = "^0.109.2"
+httpx = "^0.27.0"
 pydantic = {version = "^2.6.1", extras = ["email"]}
 pydantic-settings = "^2.2.0"
 pytest-asyncio = "^0.23.5"
@@ -1037,7 +1038,7 @@ uvicorn = "^0.27.1"
 type = "git"
 url = "https://github.com/marcorsouza/pylon.git"
 reference = "HEAD"
-resolved_reference = "09b6cc6e82a4b66a89c6f7acf9be11194db42949"
+resolved_reference = "0e860b8aac52792fd55d3fe658939c8461d5f91b"
 
 [[package]]
 name = "pytest"
@@ -1382,4 +1383,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "f1143c58df9b0c56a695cf68af8916b838de3b77cc0dd7fa6ff1781ef608b69d"
+content-hash = "c1f99da370156aa00da500a3f2d00221bef493169327e37e7b806754dbbf40a7"
