@@ -117,7 +117,7 @@ async def delete_role(
 
 @role_router.post(
     '/add_actions_to_role/{role_id}',
-    dependencies=[Depends(PermissionChecker('CREATE_ROLES', 'ROLES'))],
+    dependencies=[Depends(PermissionChecker('CREATE_ACTIONS', 'ROLES'))],
     response_model=RolePublic,
     summary='Add actions to a role',
     description='Adds specified actions to a role based on the role ID.',
@@ -133,7 +133,7 @@ async def add_actions_to_role(
 
 @role_router.put(
     '/del_actions_to_role/{role_id}',
-    dependencies=[Depends(PermissionChecker('DELETE_ROLES', 'ROLES'))],
+    dependencies=[Depends(PermissionChecker('DELETE_ACTIONS', 'ROLES'))],
     response_model=RolePublic,
     summary='Remove actions from a role',
     description='Removes specified actions from a role based on the role ID.',
