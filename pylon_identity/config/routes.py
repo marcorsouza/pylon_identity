@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pylon.api.routes.log_routes import log_router  # Import roteador de logs
+from pylon.api.routes.health_check_routes import check_router  # Import roteador de Hearth Check
 
 from pylon_identity.api.admin.routes.application_routes import (  # Import roteador de aplicações
     application_router,
@@ -13,10 +14,10 @@ from pylon_identity.api.admin.routes.task_routes import (  # Import roteador de 
 from pylon_identity.api.admin.routes.user_routes import (  # Import roteador de usuarios
     user_router,
 )
-
 from pylon_identity.api.auth.routes.auth_routes import (  # Import roteador de usuário
     auth_router,
 )
+
 """
 def add_api_routes2(app: FastAPI):
     
@@ -47,4 +48,5 @@ def add_api_routes(app: FastAPI):
     app.include_router(role_router)
     app.include_router(task_router)
     app.include_router(log_router)
+    app.include_router(check_router)
     app.include_router(auth_router)

@@ -1038,7 +1038,7 @@ uvicorn = "^0.27.1"
 type = "git"
 url = "https://github.com/marcorsouza/pylon.git"
 reference = "HEAD"
-resolved_reference = "667ced082ea87a0b6bc08fed95afb97f681914fa"
+resolved_reference = "1df01ac35bd01c5e557b0e248713731bcee0b6dc"
 
 [[package]]
 name = "pytest"
