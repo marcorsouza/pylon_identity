@@ -4,7 +4,9 @@ from pylon.api.middlewares.auth_middleware import AuthMiddleware
 
 allow_routes = [
     '/auth/login',
-    '/health'
+    '/health',
+    '/docs',
+    '/openapi.json'
 ]
 
 
