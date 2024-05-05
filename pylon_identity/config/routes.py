@@ -14,6 +14,9 @@ from pylon_identity.api.admin.routes.user_routes import (  # Import roteador de 
     user_router,
 )
 
+from pylon_identity.api.auth.routes.auth_routes import (  # Import roteador de usuário
+    auth_router,
+)
 """
 def add_api_routes2(app: FastAPI):
     
@@ -44,3 +47,4 @@ def add_api_routes(app: FastAPI):
     app.include_router(role_router)
     app.include_router(task_router)
     app.include_router(log_router)
+    app.include_router(auth_router)
