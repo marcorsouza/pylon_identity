@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pylon.api.routes.log_routes import log_router  # Import roteador de logs
 
 from pylon_identity.api.admin.routes.application_routes import (  # Import roteador de aplicações
     application_router,
@@ -42,3 +43,4 @@ def add_api_routes(app: FastAPI):
     app.include_router(application_router)
     app.include_router(role_router)
     app.include_router(task_router)
+    app.include_router(log_router)

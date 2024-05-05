@@ -1,11 +1,15 @@
 from fastapi import FastAPI
 from pylon.server.create_app import create_app
 
-from pylon_identity.api.admin.routes.routes import add_api_routes
 from pylon_identity.api.auth.routes.routes import add_api_auth_routes
+from pylon_identity.config.middlewares import add_api_middlewares
+from pylon_identity.config.routes import add_api_routes
 
 app: FastAPI = create_app(
-    title='Pylon Identity API', add_routes=add_api_routes
+    title='Pylon Identity API',
+    version='0.0.1',
+    add_routes=add_api_routes,
+    add_middlewares=add_api_middlewares,
 )
 add_api_auth_routes(app)
 

@@ -1014,7 +1014,7 @@ files = [
 
 [[package]]
 name = "pylon"
-version = "0.1.8"
+version = "0.1.9"
 description = ""
 optional = false
 python-versions = "^3.11"
@@ -1038,7 +1038,7 @@ uvicorn = "^0.27.1"
 type = "git"
 url = "https://github.com/marcorsouza/pylon.git"
 reference = "HEAD"
-resolved_reference = "12bdae69755de1022ede8f4fe2f1f18152ea915a"
+resolved_reference = "667ced082ea87a0b6bc08fed95afb97f681914fa"
 
 [[package]]
 name = "pytest"

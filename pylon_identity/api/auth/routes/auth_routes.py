@@ -5,7 +5,7 @@ from pylon.api.schemas.message_schema import Message
 from pylon_identity.api.admin.schemas.user_schema import TokenAndUserPublic
 from pylon_identity.api.auth.controllers.auth_controller import AuthController
 from pylon_identity.api.auth.schemas.auth_schema import CheckPermissionSchema
-from pylon_identity.api.dependencies import get_auth_controller
+from pylon_identity.config.dependencies import get_auth_controller
 from pylon_identity.config.security import create_access_token
 
 # Criar roteador
@@ -20,7 +20,7 @@ auth_router = APIRouter(
     response_model=TokenAndUserPublic,
     summary='Authenticate a user',
     description='Performs authentication for a user using username and password credentials. If successful, it returns an access token and user details.',
-    response_description='The authentication token along with public user details.'
+    response_description='The authentication token along with public user details.',
 )
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -54,7 +54,7 @@ async def login_for_access_token(
     response_model=Message,
     summary='Check user permissions',
     description='Checks if the authenticated user has permission to perform a specific action on a resource, based on provided data including username, tag name, acronym, and action name.',
-    response_description='A message indicating if the user has the required permission.'
+    response_description='A message indicating if the user has the required permission.',
 )
 async def check_user_permission(
     permission_data: CheckPermissionSchema = Body(...),

@@ -1,8 +1,8 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException
+from pylon.api.middlewares.permission_middleware import PermissionChecker
 from pylon.api.schemas.message_schema import Message
-from pylon.api.middlewares.permission_checker import PermissionChecker
 
 from pylon_identity.api.admin.controllers.user_controller import UserController
 from pylon_identity.api.admin.models import User
@@ -14,7 +14,7 @@ from pylon_identity.api.admin.schemas.user_schema import (
     UserSchema,
     UserUpdate,
 )
-from pylon_identity.api.dependencies import get_user_controller
+from pylon_identity.config.dependencies import get_user_controller
 from pylon_identity.config.security import get_current_user
 
 # Criar roteador
@@ -37,7 +37,7 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
     response_description='The details of the created user.',
 )
 async def create_user(
-    user_in: UserSchema = Body(...),    
+    user_in: UserSchema = Body(...),
     user_controller: UserController = Depends(get_user_controller),
 ):
     return await user_controller.create(user_in)

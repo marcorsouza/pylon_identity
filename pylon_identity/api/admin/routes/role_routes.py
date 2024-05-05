@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends
-from pylon.api.middlewares.permission_checker import PermissionChecker
+from pylon.api.middlewares.permission_middleware import PermissionChecker
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.role_controller import RoleController
@@ -11,7 +11,7 @@ from pylon_identity.api.admin.schemas.role_schema import (
     RoleSchema,
     RoleUpdate,
 )
-from pylon_identity.api.dependencies import get_role_controller
+from pylon_identity.config.dependencies import get_role_controller
 
 # Criar roteador
 role_router = APIRouter(

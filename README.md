@@ -11,7 +11,7 @@ Pylon Identity é uma biblioteca de gerenciamento de identidade e acesso, constr
 - Interface de administração para gerenciamento de usuários, roles e permissões
 
 ## Pré-requisitos
-Este projeto requer Python 3.8+ e [Poetry](https://python-poetry.org/) como gerenciador de dependências.
+Este projeto requer Python 3.11+ e [Poetry](https://python-poetry.org/) como gerenciador de dependências.
 
 ## Instalação
 
