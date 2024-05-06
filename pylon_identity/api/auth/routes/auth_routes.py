@@ -9,13 +9,13 @@ from pylon_identity.config.dependencies import get_auth_controller
 from pylon_identity.config.security import create_access_token
 
 # Criar roteador
-auth_router = APIRouter(
+auth_routes = APIRouter(
     prefix='/auth',
     tags=['Auth'],
 )
 
 # Rota de login (sem autenticação real por enquanto)
-@auth_router.post(
+@auth_routes.post(
     '/login',
     response_model=TokenAndUserPublic,
     summary='Authenticate a user',
@@ -49,7 +49,7 @@ async def login_for_access_token(
     }
 
 
-@auth_router.post(
+@auth_routes.post(
     '/check-permission',
     response_model=Message,
     summary='Check user permissions',

@@ -6,7 +6,8 @@ allow_routes = [
     '/auth/login',
     '/health',
     '/docs',
-    '/openapi.json'
+    '/openapi.json',
+    '/do_login',
 ]
 
 

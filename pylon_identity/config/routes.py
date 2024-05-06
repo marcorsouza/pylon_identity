@@ -1,52 +1,45 @@
+import os
+
 from fastapi import FastAPI
+from pylon.api.routes.do_login_routes import (  # Import roteador de Hearth Check
+    do_login_router,
+)
+from pylon.api.routes.health_check_routes import (  # Import roteador de Hearth Check
+    check_router,
+)
 from pylon.api.routes.log_routes import log_router  # Import roteador de logs
-from pylon.api.routes.health_check_routes import check_router  # Import roteador de Hearth Check
-
-from pylon_identity.api.admin.routes.application_routes import (  # Import roteador de aplicações
-    application_router,
-)
-from pylon_identity.api.admin.routes.role_routes import (  # Import roteador de regras
-    role_router,
-)
-from pylon_identity.api.admin.routes.task_routes import (  # Import roteador de tarefas
-    task_router,
-)
-from pylon_identity.api.admin.routes.user_routes import (  # Import roteador de usuarios
-    user_router,
-)
-from pylon_identity.api.auth.routes.auth_routes import (  # Import roteador de usuário
-    auth_router,
+from pylon.config.helpers import settings
+from pylon.utils.file_utils import (
+    get_attribute,
+    get_filename,
+    get_files,
+    get_import_module,
 )
 
-"""
-def add_api_routes2(app: FastAPI):
-    
+
+def _load_and_register_routers(app: FastAPI):
+    list_modules = []
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    
-     # Navega até a raiz do projeto (supondo que a raiz seja o diretório pai do diretório do script)
+    # Navega até a raiz do projeto (supondo que a raiz seja o diretório pai do diretório do script)
     root_dir = os.path.dirname(script_dir)
-    
-    for file in get_files(os.path.join(root_dir, api_folder), '_routes.py', True):
-    
-    # Lista todos os arquivos no diretório de rotas
-    for file in os.listdir(routes_directory):
-        if file.endswith("_routes.py"):  # Filtra por arquivos de rotas
-            module_name = file[:-3]  # Remove a extensão '.py'
-            module_path = f"{base_import_path}.{module_name}"
-            module = importlib.import_module(module_path)
-            for attr_name in dir(module):
-                attr = getattr(module, attr_name)
-                if hasattr(attr, "include_router"):
-                    # Assume que o objeto tem um método 'include_router'
-                    app.include_router(attr)
-"""
+    for file in get_files(root_dir, '_routes.py', True):
+        filename = get_filename(file)[0]
+        module_base = file.replace(os.path.sep, '.')
+        module_name = module_base[:-3]
+        posicao_api = module_name.rfind('api.')
+        module_name = module_name[posicao_api:]
+        module = get_import_module(
+            f'{settings.APPLICATION_FOLDER}.{module_name}'
+        )     # importlib.import_module(module_name)
+        router = get_attribute(
+            module, filename
+        )   # getattr(obj, attr, default)
+        app.include_router(router)
+        list_modules.append(module)
 
 
 def add_api_routes(app: FastAPI):
-    app.include_router(user_router)
-    app.include_router(application_router)
-    app.include_router(role_router)
-    app.include_router(task_router)
+    _load_and_register_routers(app=app)
     app.include_router(log_router)
     app.include_router(check_router)
-    app.include_router(auth_router)
+    app.include_router(do_login_router)

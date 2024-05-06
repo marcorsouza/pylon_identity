@@ -14,13 +14,13 @@ from pylon_identity.api.admin.schemas.role_schema import (
 from pylon_identity.config.dependencies import get_role_controller
 
 # Criar roteador
-role_router = APIRouter(
+role_routes = APIRouter(
     prefix='/admin/roles',
     tags=['Roles'],
 )
 
 # Rota de criação de regra
-@role_router.post(
+@role_routes.post(
     '/',
     dependencies=[Depends(PermissionChecker('CREATE', 'ROLES'))],
     response_model=RolePublic,
@@ -37,7 +37,7 @@ async def create_role(
 
 
 # Rota de recuperação de todas as regras
-@role_router.get(
+@role_routes.get(
     '/',
     dependencies=[Depends(PermissionChecker('READ', 'ROLES'))],
     response_model=RoleList,
@@ -51,7 +51,7 @@ async def get_roles(
     return await role_controller.get_all()
 
 
-@role_router.post(
+@role_routes.post(
     '/paged-list',
     dependencies=[Depends(PermissionChecker('READ', 'ROLES'))],
     response_model=RolePagedList,
@@ -67,7 +67,7 @@ async def paged_list(
 
 
 # Rota de recuperação de uma regra por ID
-@role_router.get(
+@role_routes.get(
     '/{role_id}',
     dependencies=[Depends(PermissionChecker('READ', 'ROLES'))],
     response_model=RolePublic,
@@ -83,7 +83,7 @@ async def get_role(
 
 
 # Rota de atualização de uma regra por ID
-@role_router.put(
+@role_routes.put(
     '/{role_id}',
     dependencies=[Depends(PermissionChecker('UPDATE', 'ROLES'))],
     response_model=RolePublic,
@@ -100,7 +100,7 @@ async def update_role(
 
 
 # Rota de exclusão de uma regra por ID
-@role_router.delete(
+@role_routes.delete(
     '/{role_id}',
     dependencies=[Depends(PermissionChecker('DELETE', 'ROLES'))],
     response_model=Message,
@@ -115,7 +115,7 @@ async def delete_role(
     return await role_controller.delete(role_id)
 
 
-@role_router.post(
+@role_routes.post(
     '/add_actions_to_role/{role_id}',
     dependencies=[Depends(PermissionChecker('CREATE_ACTIONS', 'ROLES'))],
     response_model=RolePublic,
@@ -131,7 +131,7 @@ async def add_actions_to_role(
     return await role_controller.add_actions_to_role(role_id, action_in)
 
 
-@role_router.put(
+@role_routes.put(
     '/del_actions_to_role/{role_id}',
     dependencies=[Depends(PermissionChecker('DELETE_ACTIONS', 'ROLES'))],
     response_model=RolePublic,

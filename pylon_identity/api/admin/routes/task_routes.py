@@ -14,13 +14,13 @@ from pylon_identity.api.admin.schemas.task_schema import (
 from pylon_identity.config.dependencies import get_task_controller
 
 # Criar roteador
-task_router = APIRouter(
+task_routes = APIRouter(
     prefix='/admin/tasks',
     tags=['Tasks'],
 )
 
 # Rota de criação de aplicação
-@task_router.post(
+@task_routes.post(
     '/',
     dependencies=[Depends(PermissionChecker('CREATE', 'TASKS'))],
     response_model=TaskPublic,
@@ -37,7 +37,7 @@ async def create_task(
 
 
 # Rota de recuperação de todas as aplicações
-@task_router.get(
+@task_routes.get(
     '/',
     dependencies=[Depends(PermissionChecker('READ', 'TASKS'))],
     response_model=TaskList,
@@ -51,7 +51,7 @@ async def get_tasks(
     return await task_controller.get_all()
 
 
-@task_router.post(
+@task_routes.post(
     '/paged-list',
     dependencies=[Depends(PermissionChecker('READ', 'TASKS'))],
     response_model=TaskPagedList,
@@ -67,7 +67,7 @@ async def paged_list(
 
 
 # Rota de recuperação de uma aplicação por ID
-@task_router.get(
+@task_routes.get(
     '/{task_id}',
     dependencies=[Depends(PermissionChecker('READ', 'TASKS'))],
     response_model=TaskPublic,
@@ -83,7 +83,7 @@ async def get_task(
 
 
 # Rota de atualização de uma aplicação por ID
-@task_router.put(
+@task_routes.put(
     '/{task_id}',
     dependencies=[Depends(PermissionChecker('UPDATE', 'TASKS'))],
     response_model=TaskPublic,
@@ -100,7 +100,7 @@ async def update_task(
 
 
 # Rota de exclusão de uma aplicação por ID
-@task_router.delete(
+@task_routes.delete(
     '/{task_id}',
     dependencies=[Depends(PermissionChecker('DELETE', 'TASKS'))],
     response_model=Message,
@@ -115,7 +115,7 @@ async def delete_task(
     return await task_controller.delete(task_id)
 
 
-@task_router.post(
+@task_routes.post(
     '/add_action_to_task/{task_id}',
     dependencies=[Depends(PermissionChecker('CREATE_ACTIONS', 'TASKS'))],
     response_model=TaskPublic,
@@ -131,7 +131,7 @@ async def add_action_to_task(
     return await task_controller.add_action_to_task(task_id, action_in)
 
 
-@task_router.put(
+@task_routes.put(
     '/delete_action_from_task/{task_id}',
     dependencies=[Depends(PermissionChecker('DELETE_ACTIONS', 'TASKS'))],
     response_model=TaskPublic,

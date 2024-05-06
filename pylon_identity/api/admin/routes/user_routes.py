@@ -18,7 +18,7 @@ from pylon_identity.config.dependencies import get_user_controller
 from pylon_identity.config.security import get_current_user
 
 # Criar roteador
-user_router = APIRouter(
+user_routes = APIRouter(
     prefix='/admin/users',
     tags=['Users'],
 )
@@ -27,7 +27,7 @@ user_router = APIRouter(
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 # Rota de criação de usuário
-@user_router.post(
+@user_routes.post(
     '/',
     dependencies=[Depends(PermissionChecker('CREATE', 'USERS'))],
     response_model=UserPublic,
@@ -44,7 +44,7 @@ async def create_user(
 
 
 # Rota de recuperação de todos os usuários
-@user_router.get(
+@user_routes.get(
     '/',
     response_model=UserList,
     dependencies=[Depends(PermissionChecker('READ', 'USERS'))],
@@ -58,7 +58,7 @@ async def get_users(
     return await user_controller.get_all()
 
 
-@user_router.post(
+@user_routes.post(
     '/paged-list',
     dependencies=[Depends(PermissionChecker('READ', 'USERS'))],
     response_model=UserPagedList,
@@ -74,7 +74,7 @@ async def paged_list(
 
 
 # Rota de recuperação de um usuário por ID
-@user_router.get(
+@user_routes.get(
     '/{user_id}',
     dependencies=[Depends(PermissionChecker('READ', 'USERS'))],
     response_model=UserPublic,
@@ -90,7 +90,7 @@ async def get_user(
 
 
 # Rota de atualização de um usuário por ID
-@user_router.put(
+@user_routes.put(
     '/{user_id}',
     dependencies=[Depends(PermissionChecker('UPDATE', 'USERS'))],
     response_model=UserPublic,
@@ -111,7 +111,7 @@ async def update_user(
 
 
 # Rota de exclusão de um usuário por ID
-@user_router.delete(
+@user_routes.delete(
     '/{user_id}',
     dependencies=[Depends(PermissionChecker('DELETE', 'USERS'))],
     response_model=Message,
@@ -127,7 +127,7 @@ async def delete_user(
     return await user_controller.delete(user_id)
 
 
-@user_router.post(
+@user_routes.post(
     '/add_roles_to_user/{user_id}',
     dependencies=[Depends(PermissionChecker('CREATE_ROLES', 'USERS'))],
     response_model=UserPublic,
@@ -144,7 +144,7 @@ async def add_roles_to_user(
     return await user_controller.add_roles_to_user(user_id, user_in)
 
 
-@user_router.put(
+@user_routes.put(
     '/del_roles_to_user/{user_id}',
     dependencies=[Depends(PermissionChecker('DELETE_ROLES', 'USERS'))],
     response_model=UserPublic,

@@ -15,14 +15,14 @@ from pylon_identity.api.admin.schemas.application_schema import (
 from pylon_identity.config.dependencies import get_application_controller
 
 # Criar roteador
-application_router = APIRouter(
+application_routes = APIRouter(
     prefix='/admin/applications',
     tags=['Applications'],
 )
 
 
 # Rota de criação de aplicação
-@application_router.post(
+@application_routes.post(
     '/',
     dependencies=[Depends(PermissionChecker('CREATE', 'APPLICATIONS'))],
     response_model=ApplicationPublic,
@@ -41,7 +41,7 @@ async def create_application(
 
 
 # Rota de recuperação de todas as aplicações
-@application_router.get(
+@application_routes.get(
     '/',
     dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
     response_model=ApplicationList,
@@ -58,7 +58,7 @@ async def get_applications(
     return await application_controller.get_all()
 
 
-@application_router.post(
+@application_routes.post(
     '/paged-list',
     dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
     response_model=ApplicationPagedList,
@@ -76,7 +76,7 @@ async def paged_list(
 
 
 # Rota de recuperação de uma aplicação por ID
-@application_router.get(
+@application_routes.get(
     '/{application_id}',
     dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
     response_model=ApplicationPublic,
@@ -94,7 +94,7 @@ async def get_application(
 
 
 # Rota de atualização de uma aplicação por ID
-@application_router.put(
+@application_routes.put(
     '/{application_id}',
     dependencies=[Depends(PermissionChecker('UPDATE', 'APPLICATIONS'))],
     response_model=ApplicationPublic,
@@ -113,7 +113,7 @@ async def update_application(
 
 
 # Rota de exclusão de uma aplicação por ID
-@application_router.delete(
+@application_routes.delete(
     '/{application_id}',
     dependencies=[Depends(PermissionChecker('DELETE', 'APPLICATIONS'))],
     response_model=Message,
