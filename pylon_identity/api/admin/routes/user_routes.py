@@ -55,7 +55,7 @@ async def create_user(
 async def get_users(
     user_controller: UserController = Depends(get_user_controller),
 ):
-    return await user_controller.get_all()
+    return await user_controller.find_all()
 
 
 @user_routes.post(
@@ -86,7 +86,7 @@ async def get_user(
     user_id: int,
     user_controller: UserController = Depends(get_user_controller),
 ):
-    return await user_controller.get_by_id(user_id)
+    return await user_controller.find_by_id(user_id)
 
 
 # Rota de atualização de um usuário por ID
@@ -119,7 +119,7 @@ async def update_user(
     description='Deletes a user from the system based on the provided user ID. Restricted to admin users.',
     response_description='Confirmation message of deletion.',
 )
-async def delete_user(
+async def destroy_user(
     user_id: int,
     user_controller: UserController = Depends(get_user_controller),
     current_user: CurrentUser = CurrentUser,
