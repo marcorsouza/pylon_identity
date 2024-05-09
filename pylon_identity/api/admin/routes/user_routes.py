@@ -124,7 +124,7 @@ async def destroy_user(
     user_controller: UserController = Depends(get_user_controller),
     current_user: CurrentUser = CurrentUser,
 ):
-    return await user_controller.delete(user_id)
+    return await user_controller.destroy(user_id)
 
 
 @user_routes.post(

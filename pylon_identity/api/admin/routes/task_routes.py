@@ -112,7 +112,7 @@ async def destroy_task(
     task_id: int,
     task_controller: TaskController = Depends(get_task_controller),
 ):
-    return await task_controller.delete(task_id)
+    return await task_controller.destroy(task_id)
 
 
 @task_routes.post(
@@ -144,4 +144,4 @@ async def destroy_action_from_task(
     action_in: ActionCreate = Body(...),
     task_controller: TaskController = Depends(get_task_controller),
 ):
-    return await task_controller.delete_action_from_task(task_id, action_in)
+    return await task_controller.destroy_action_from_task(task_id, action_in)

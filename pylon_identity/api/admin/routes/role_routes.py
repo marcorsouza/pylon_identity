@@ -112,7 +112,7 @@ async def destroy_role(
     role_id: int,
     role_controller: RoleController = Depends(get_role_controller),
 ):
-    return await role_controller.delete(role_id)
+    return await role_controller.destroy(role_id)
 
 
 @role_routes.post(

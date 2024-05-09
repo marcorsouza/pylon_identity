@@ -1,5 +1,3 @@
-import os
-
 from fastapi import FastAPI
 from pylon.config.helpers import settings
 from pylon.server.create_app import create_app

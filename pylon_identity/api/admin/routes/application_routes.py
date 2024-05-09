@@ -127,4 +127,4 @@ async def destroy_application(
         get_application_controller
     ),
 ):
-    return await application_controller.delete(application_id)
+    return await application_controller.destroy(application_id)
