@@ -55,7 +55,7 @@ async def get_applications(
     ),
 ):
     # print(f'result => {result}')
-    return await application_controller.get_all()
+    return await application_controller.find_all()
 
 
 @application_routes.post(
@@ -90,7 +90,7 @@ async def get_application(
         get_application_controller
     ),
 ):
-    return await application_controller.get_by_id(application_id)
+    return await application_controller.find_by_id(application_id)
 
 
 # Rota de atualização de uma aplicação por ID
@@ -121,10 +121,10 @@ async def update_application(
     description='Deletes an application from the system based on the provided application ID.',
     response_description='Confirmation message of deletion.',
 )
-async def delete_application(
+async def destroy_application(
     application_id: int,
     application_controller: ApplicationController = Depends(
         get_application_controller
     ),
 ):
-    return await application_controller.delete(application_id)
+    return await application_controller.destroy(application_id)

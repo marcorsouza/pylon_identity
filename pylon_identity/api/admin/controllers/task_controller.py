@@ -13,5 +13,5 @@ class TaskController(BaseController):
         return self.service.add_action_to_task(task_id, action_name)
 
     @log_decorator
-    async def delete_action_from_task(self, task_id: int, action_name):
+    async def destroy_action_from_task(self, task_id: int, action_name):
         return self.service.delete_action_from_task(task_id, action_name)

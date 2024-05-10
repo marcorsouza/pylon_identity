@@ -35,11 +35,11 @@ class UserService(BaseService):
         Returns:
             User: O usuário criado.
         """
-        db_user = self._get_by_username(user_data.username)
+        db_user = self._find_by_username(user_data.username)
         if db_user:
             raise BadRequestException('Username already registered')
 
-        db_user = self._get_by_email(user_data.email)
+        db_user = self._find_by_email(user_data.email)
         if db_user:
             raise BadRequestException('E-mail already registered')
 
@@ -47,11 +47,11 @@ class UserService(BaseService):
             user_data.password = encrypt_value(user_data.password)
             user = User(**user_data.model_dump())
             self._create(user)
-            return self._get_by_id(user.id)
+            return self._find_by_id(user.id)
         except Exception:
             raise BadRequestException('Error inserting user')
 
-    def get_all(self):
+    def find_all(self):
         """
         Obtém todos os usuários.
 
@@ -59,13 +59,13 @@ class UserService(BaseService):
             dict: Dicionário contendo todos os usuários.
         """
 
-        results = self._get_all()
+        results = self._find_all()
         return {'users': results}
 
     def paged_list(self, filters=None):
         return self._paged_list(filters)
 
-    def get_by_id(self, user_id: int):
+    def find_by_id(self, user_id: int):
         """
         Obtém um usuário pelo ID.
 
@@ -78,7 +78,7 @@ class UserService(BaseService):
         Raises:
             NotFoundException: Se o usuário não for encontrado.
         """
-        user = self._get_by_id(user_id)
+        user = self._find_by_id(user_id)
         if user and user.id == user_id:
             return user
         raise NotFoundException('User not found.')
@@ -97,7 +97,7 @@ class UserService(BaseService):
         Raises:
             NotFoundException: Se o usuário não for encontrado.
         """
-        user = self._get_by_id(user_id)
+        user = self._find_by_id(user_id)
         if not user or user_id < 1:
             raise NotFoundException('User not found.')   # pragma: no cover
 
@@ -107,7 +107,7 @@ class UserService(BaseService):
         except Exception:
             raise BadRequestException('Error updating user')
 
-    def delete(self, user_id: int):
+    def destroy(self, user_id: int):
         """
         Exclui um usuário.
 
@@ -120,14 +120,14 @@ class UserService(BaseService):
         Raises:
             NotFoundException: Se o usuário não for encontrado.
         """
-        deleted = self._delete(user_id)
+        deleted = self._destroy(user_id)
 
         if not deleted or user_id < 1:
             raise NotFoundException('User not found.')  # pragma: no cover
 
         return {'message': 'User deleted'}
 
-    def _get_by_username(self, username):
+    def _find_by_username(self, username):
         # Consulta o banco de dados para obter o usuário pelo username
         user = (
             self.session.query(self.model_data)
@@ -138,7 +138,7 @@ class UserService(BaseService):
         )
         return user
 
-    def _get_by_email(self, email):
+    def _find_by_email(self, email):
         # Consulta o banco de dados para obter o usuário pelo email
         user = (
             self.session.query(self.model_data)
@@ -160,7 +160,7 @@ class UserService(BaseService):
         Raises:
             NotFoundException: Se o usuário não for encontrado.
         """
-        user = self._get_by_username(username)
+        user = self._find_by_username(username)
         if user:
             return user
         raise NotFoundException('User not found.')
@@ -232,7 +232,7 @@ class UserService(BaseService):
         self.session.commit()
 
     def add_roles_to_user(self, user_id: int, user_role: UserRole):
-        user = self._get_by_id(user_id)
+        user = self._find_by_id(user_id)
         if not user:
             raise NotFoundException('User not found.')
 
@@ -248,10 +248,10 @@ class UserService(BaseService):
                 user.roles.append(role)
 
         self.session.commit()
-        return self._get_by_id(user.id)
+        return self._find_by_id(user.id)
 
     def del_roles_to_user(self, user_id: int, user_role: UserRole):
-        user = self._get_by_id(user_id)
+        user = self._find_by_id(user_id)
         if not user:
             raise NotFoundException('User not found.')
 
@@ -269,7 +269,7 @@ class UserService(BaseService):
                 user.roles.remove(role)
 
         self.session.commit()
-        return self._get_by_id(user.id)
+        return self._find_by_id(user.id)
 
     def check_permission(self, permission_data: CheckPermissionSchema):
         # Criar o filtro utilizando os dados

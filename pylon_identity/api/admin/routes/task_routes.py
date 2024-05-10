@@ -48,7 +48,7 @@ async def create_task(
 async def get_tasks(
     task_controller: TaskController = Depends(get_task_controller),
 ):
-    return await task_controller.get_all()
+    return await task_controller.find_all()
 
 
 @task_routes.post(
@@ -79,7 +79,7 @@ async def get_task(
     task_id: int,
     task_controller: TaskController = Depends(get_task_controller),
 ):
-    return await task_controller.get_by_id(task_id)
+    return await task_controller.find_by_id(task_id)
 
 
 # Rota de atualização de uma aplicação por ID
@@ -108,11 +108,11 @@ async def update_task(
     description='Deletes a task from the system based on the provided task ID.',
     response_description='Confirmation message of deletion.',
 )
-async def delete_task(
+async def destroy_task(
     task_id: int,
     task_controller: TaskController = Depends(get_task_controller),
 ):
-    return await task_controller.delete(task_id)
+    return await task_controller.destroy(task_id)
 
 
 @task_routes.post(
@@ -139,9 +139,9 @@ async def add_action_to_task(
     description='Removes a specified action from a task based on the task ID.',
     response_description='Task details after the action removal.',
 )
-async def delete_action_from_task(
+async def destroy_action_from_task(
     task_id: int,
     action_in: ActionCreate = Body(...),
     task_controller: TaskController = Depends(get_task_controller),
 ):
-    return await task_controller.delete_action_from_task(task_id, action_in)
+    return await task_controller.destroy_action_from_task(task_id, action_in)

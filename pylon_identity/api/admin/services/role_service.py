@@ -32,11 +32,11 @@ class RoleService(BaseService):
         try:
             role = Role(**role_data.model_dump())
             self._create(role)
-            return self._get_by_id(role.id)
+            return self._find_by_id(role.id)
         except Exception:
             raise BadRequestException('Error inserting role')
 
-    def get_all(self):
+    def find_all(self):
         """
         Obtém todos as regras.
 
@@ -44,13 +44,13 @@ class RoleService(BaseService):
             dict: Dicionário contendo todos as regras.
         """
 
-        results = self._get_all()
+        results = self._find_all()
         return {'roles': results}
 
     def paged_list(self, filters=None):
         return self._paged_list(filters)
 
-    def get_by_id(self, role_id: int):
+    def find_by_id(self, role_id: int):
         """
         Obtém uma regra pelo ID.
 
@@ -63,7 +63,7 @@ class RoleService(BaseService):
         Raises:
             HTTPException: Se a regra não for encontrada.
         """
-        role = self._get_by_id(role_id)
+        role = self._find_by_id(role_id)
         if role and role.id == role_id:
             return role
         raise NotFoundException('Role not found.')
@@ -83,7 +83,7 @@ class RoleService(BaseService):
             HTTPException: Se a regra não for encontrada.
         """
         try:
-            role = self._get_by_id(role_id)
+            role = self._find_by_id(role_id)
             if not role or role_id < 1:
                 raise NotFoundException('Role not found.')   # pragma: no cover
 
@@ -92,7 +92,7 @@ class RoleService(BaseService):
         except Exception:
             raise BadRequestException('Error updating role')
 
-    def delete(self, role_id: int):
+    def destroy(self, role_id: int):
         """
         Exclui uma regra.
 
@@ -105,7 +105,7 @@ class RoleService(BaseService):
         Raises:
             HTTPException: Se a regra não for encontrada.
         """
-        deleted = self._delete(role_id)
+        deleted = self._destroy(role_id)
 
         if not deleted or role_id < 1:
             raise NotFoundException('Role not found')   # pragma: no cover
@@ -113,7 +113,7 @@ class RoleService(BaseService):
         return {'message': 'Role deleted'}
 
     def add_actions_to_role(self, role_id: int, role_action: RoleAction):
-        role = self._get_by_id(role_id)
+        role = self._find_by_id(role_id)
         if not role:
             raise NotFoundException('Role not found')
 
@@ -131,10 +131,10 @@ class RoleService(BaseService):
                 role.actions.append(action)
 
         self.session.commit()
-        return self._get_by_id(role.id)
+        return self._find_by_id(role.id)
 
     def del_actions_to_role(self, role_id: int, role_action: RoleAction):
-        role = self._get_by_id(role_id)
+        role = self._find_by_id(role_id)
         if not role:
             raise NotFoundException('Role not found')
 
@@ -152,4 +152,4 @@ class RoleService(BaseService):
                 role.actions.remove(action)
 
         self.session.commit()
-        return self._get_by_id(role.id)
+        return self._find_by_id(role.id)

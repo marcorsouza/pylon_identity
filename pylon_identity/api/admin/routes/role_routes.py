@@ -48,7 +48,7 @@ async def create_role(
 async def get_roles(
     role_controller: RoleController = Depends(get_role_controller),
 ):
-    return await role_controller.get_all()
+    return await role_controller.find_all()
 
 
 @role_routes.post(
@@ -79,7 +79,7 @@ async def get_role(
     role_id: int,
     role_controller: RoleController = Depends(get_role_controller),
 ):
-    return await role_controller.get_by_id(role_id)
+    return await role_controller.find_by_id(role_id)
 
 
 # Rota de atualização de uma regra por ID
@@ -108,11 +108,11 @@ async def update_role(
     description='Deletes a role from the system based on the provided role ID.',
     response_description='Confirmation message of deletion.',
 )
-async def delete_role(
+async def destroy_role(
     role_id: int,
     role_controller: RoleController = Depends(get_role_controller),
 ):
-    return await role_controller.delete(role_id)
+    return await role_controller.destroy(role_id)
 
 
 @role_routes.post(

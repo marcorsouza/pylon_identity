@@ -16,7 +16,7 @@ class TaskService(BaseService):
         super().__init__(session, Task, TaskSchema)
         self.public_schema = TaskPublic
 
-    def get_all(self):
+    def find_all(self):
         """
         Obtém todos as tarefas.
 
@@ -24,13 +24,13 @@ class TaskService(BaseService):
             dict: Dicionário contendo todos as tarefas.
         """
 
-        results = self._get_all()
+        results = self._find_all()
         return {'tasks': results}
 
     def paged_list(self, filters=None):
         return self._paged_list(filters)
 
-    def get_by_id(self, task_id: int):
+    def find_by_id(self, task_id: int):
         """
         Obtém uma tarefa pelo ID.
 
@@ -43,7 +43,7 @@ class TaskService(BaseService):
         Raises:
             HTTPException: Se a tarefa não for encontrada.
         """
-        task = self._get_by_id(task_id)
+        task = self._find_by_id(task_id)
         if task and task.id == task_id:
             return task
         raise NotFoundException('Task not found.')
@@ -71,7 +71,7 @@ class TaskService(BaseService):
                     task.actions.append(Action(name=action_data.name))
 
             self._create(task)
-            return self._get_by_id(task.id)
+            return self._find_by_id(task.id)
         except Exception:
             raise BadRequestException('Error inserting action')
 
@@ -89,7 +89,7 @@ class TaskService(BaseService):
         Raises:
             HTTPException: Se a tarefa não for encontrada.
         """
-        task = self._get_by_id(task_id)
+        task = self._find_by_id(task_id)
         if not task or task_id < 1:
             raise NotFoundException('Task not found.')   # pragma: no cover
 
@@ -104,7 +104,7 @@ class TaskService(BaseService):
         except Exception:
             raise BadRequestException('Error updating action')
 
-    def delete(self, task_id: int):
+    def destroy(self, task_id: int):
         """
         Exclui uma tarefa.
 
@@ -117,7 +117,7 @@ class TaskService(BaseService):
         Raises:
             HTTPException: Se a tarefa não for encontrada.
         """
-        deleted = self._delete(task_id)
+        deleted = self._destroy(task_id)
 
         if not deleted or task_id < 1:
             raise NotFoundException('Task not found.')  # pragma: no cover
@@ -135,7 +135,7 @@ class TaskService(BaseService):
         Raises:
             BadRequestException: Se a ação já existir ou a tarefa não for encontrada.
         """
-        task = self._get_by_id(task_id)
+        task = self._find_by_id(task_id)
         if not task:
             raise NotFoundException('Task not found')
 
@@ -149,7 +149,7 @@ class TaskService(BaseService):
         self.session.commit()
         return task
 
-    def delete_action_from_task(self, task_id, action_in: ActionCreate):
+    def destroy_action_from_task(self, task_id, action_in: ActionCreate):
         """
         Remove uma ação de uma tarefa específica.
 
@@ -160,7 +160,7 @@ class TaskService(BaseService):
         Raises:
             BadRequestException: Se a ação não for encontrada ou a tarefa não for encontrada.
         """
-        task = self._get_by_id(task_id)
+        task = self._find_by_id(task_id)
         if not task:
             raise NotFoundException('Task not found')
 

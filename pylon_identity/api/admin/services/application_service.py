@@ -31,18 +31,18 @@ class ApplicationService(BaseService):
             Application: a aplicação criado.
         """
 
-        db_application = self._get_by_acronym(application_data.acronym)
+        db_application = self._find_by_acronym(application_data.acronym)
         if db_application:
             raise BadRequestException('Acronym already registered')
 
         try:
             application = Application(**application_data.model_dump())
             self._create(application)
-            return self._get_by_id(application.id)
+            return self._find_by_id(application.id)
         except Exception:
             raise BadRequestException('Error')
 
-    def get_all(self):
+    def find_all(self):
         """
         Obtém todos os aplicações.
 
@@ -50,13 +50,13 @@ class ApplicationService(BaseService):
             dict: Dicionário contendo todos os aplicações.
         """
 
-        results = self._get_all()
+        results = self._find_all()
         return {'applications': results}
 
     def paged_list(self, filters=None):
         return self._paged_list(filters)
 
-    def get_by_id(self, application_id: int):
+    def find_by_id(self, application_id: int):
         """
         Obtém uma aplicação pelo ID.
 
@@ -69,7 +69,7 @@ class ApplicationService(BaseService):
         Raises:
             HTTPException: Se a aplicação não for encontrada.
         """
-        application = self._get_by_id(application_id)
+        application = self._find_by_id(application_id)
         if application and application.id == application_id:
             return application
         raise NotFoundException('Application not found.')
@@ -88,7 +88,7 @@ class ApplicationService(BaseService):
         Raises:
             HTTPException: Se a aplicação não for encontrada.
         """
-        application = self._get_by_id(application_id)
+        application = self._find_by_id(application_id)
         if not application or application_id < 1:
             raise NotFoundException(
                 'Application not found.'
@@ -97,7 +97,7 @@ class ApplicationService(BaseService):
         self._update(application, application_data)
         return application
 
-    def delete(self, application_id: int):
+    def destroy(self, application_id: int):
         """
         Exclui uma aplicação.
 
@@ -110,7 +110,7 @@ class ApplicationService(BaseService):
         Raises:
             HTTPException: Se a aplicação não for encontrada.
         """
-        deleted = self._delete(application_id)
+        deleted = self._destroy(application_id)
 
         if not deleted or application_id < 1:
             raise NotFoundException(
@@ -119,7 +119,7 @@ class ApplicationService(BaseService):
 
         return {'message': 'Application deleted'}
 
-    def _get_by_acronym(self, acronym):
+    def _find_by_acronym(self, acronym):
         # Consulta o banco de dados para obter a aplicação pelo acronym
         application = (
             self.session.query(self.model_data)
