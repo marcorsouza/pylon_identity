@@ -8,6 +8,7 @@ allow_routes = [
     '/docs',
     '/openapi.json',
     '/do_login',
+    '/syscloud_login',
 ]
 
 

@@ -31,11 +31,7 @@ async def login_for_access_token(
     if user is None:
         return {'error': 'Usuário ou senha inválidos'}   # pragma: no cover
 
-    user_info = {
-        'username': user.username,
-        'acronym': 'APS'  # app_by_acronym.acronym
-        # outras informações que você deseja incluir no token
-    }
+    user_info = {'username': user.username, 'acronym': 'APS'}
 
     token_data = create_access_token(data=user_info)
     access_token = token_data['access_token']

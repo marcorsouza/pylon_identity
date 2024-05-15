@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Body, Depends
-from pylon.api.middlewares.permission_middleware import PermissionChecker
+from pylon.api.middlewares.permission_middleware import (
+    AuthType,
+    PermissionChecker,
+)
 from pylon.api.schemas.message_schema import Message
 
 from pylon_identity.api.admin.controllers.application_controller import (
@@ -43,7 +46,16 @@ async def create_application(
 # Rota de recuperação de todas as aplicações
 @application_routes.get(
     '/',
-    dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
+    # dependencies=[Depends(PermissionChecker('READ', 'APPLICATIONS'))],
+    dependencies=[
+        Depends(
+            PermissionChecker(
+                'movimentacoes_24h',
+                'movimentacoes',
+                auth_type=AuthType.SYSCLOUD,
+            )
+        )
+    ],
     response_model=ApplicationList,
     summary='Get all applications',
     description='Retrieves a list of all applications currently stored in the system.',
